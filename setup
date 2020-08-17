@@ -1,0 +1,157 @@
+#!/bin/sh
+
+# TODO: add `--force/-f` flag
+
+set -u
+
+# To avoid confusion...
+TRUE=1
+FALSE=0
+
+###################
+# Parse arguments #
+###################
+
+USAGE_1="Usage 1: setup help"
+USAGE_2="Usage 2: setup [-f] USER_HOME_DIRECTORY CENTRAL_CONFIG_DIR SYSTEM_CONFIG_HOME_DIR"
+USAGE_3="Usage 3: setup [-f] user USER"
+USAGE_MSG="$USAGE_1\n$USAGE_2\n$USAGE_3"
+
+if [[ "$1" == "help" ]]; then
+    echo -e "$USAGE_MSG"
+    exit 0
+fi
+
+# Parse the `-f` option
+if [[ "$1" == "-f" ]]; then
+    FORCE=$TRUE
+    echo "Warning: Using the Force."
+    shift
+else
+    FORCE=$FALSE
+fi
+
+# Simplified "user" mode.
+# All information are deducted a given user name, assuming a normal linux config layout.
+if [[ "$1" == "user" ]]; then
+    if [[ $# -ne 2 ]]; then
+        echo -e "$USAGE_MSG"
+        exit 1
+    fi
+
+    USR_HOME="/home/$2"
+    CONF_REP="$USR_HOME/config"
+    CONF_HOME="$USR_HOME/.config"
+# Normal usage: all paths meticulously specified.
+else
+    if [[ $# -ne 3 ]]; then
+        echo -e "$USAGE_MSG"
+        exit 1
+    fi
+
+    USR_HOME="$1"
+    CONF_REP="$2"
+    CONF_HOME="$3"
+fi
+
+# Backup directory: For overriding old configs in case of forced update.
+BU_DIR="$CONF_REP/bu"
+
+# Where all the dotfiles are.
+CONF_REP="$CONF_REP/dotfiles"
+
+####################
+# Helper functions #
+####################
+
+# Error reporting
+function error() {
+    echo "Error: $ERR"
+}
+
+function backup() {
+    echo "Warning: BU not implemented yet"
+}
+
+# Buffed symlink function
+function dolink() {
+    orig=${1:?"Link origin required"}
+    dest=${2:?"Link destination requied"}
+
+    echo "Setting up $unit_name at $dest"
+    ln -s "$orig" "$dest"
+}
+
+# Even more buffed symlink function (does heavylifting)
+function lncfg() {
+    # Collect args
+    dest_type="$1"
+    unit_name="$2"
+
+    # Determine origin of config unit (unit is shorthand for file/directory)
+    orig="$CONF_REP/$unit_name"
+
+    # Determine destination of config unit
+    case "$dest_type" in
+        h)
+            dest="$USR_HOME/$unit_name"
+            ;;
+        c)
+            dest="$CONF_HOME/$unit_name"
+            ;;
+        *)
+            ERR="Invalid destination type ($dest_type)"
+            return 1
+            ;;
+    esac
+
+    # Fatal error: config unit does not exist in rep
+    if [[ ! -e "$orig" ]]; then
+        ERR="$unit_name does not exist in config repository (should be located at $orig)."
+        return 1
+    fi
+
+    # Don't do anything if a config unit is already present at destination
+    if [[ -e "$dest" ]]; then
+        if [[ $FORCE -eq $TRUE ]]; then
+            echo "Warning: overriding old $unit_name conf at $dest"
+            # Save backup and do it
+            backup "$dest"; rm -r "$dest"
+            dolink "$orig" "$dest"
+        else
+            echo "Warning: $unit_name conf directory already exists at $dest (use -f flag to override)."
+        fi
+    # Check for broken symlinks.
+    elif [[ -h "$dest" ]]; then
+        old_dest=$(readlink -f "$dest")
+        echo "Warning: $unit_name already exists as a broken symlink: ($dest->$old_dest) (use -f flag to override)"
+
+        if [[ $FORCE ]]; then
+            echo "Warning: overrideing broken symlink with new one from this config repository."
+            rm "$dest"
+            dolink "$orig" "$dest"
+        fi
+    else
+        # Do it
+        dolink "$orig" "$dest"
+    fi
+}
+
+#####################################################################
+# Symlink configuration directories/files to their proper locations #
+#####################################################################
+
+# neovim
+lncfg c nvim || error 
+
+# ranger
+lncfg c ranger || error
+
+# sxhkd
+lncfg c sxhkd || error
+
+# xmonad
+lncfg h ".xmonad" || error
+
+# qutebrowser
+lncfg c qutebrowser || error

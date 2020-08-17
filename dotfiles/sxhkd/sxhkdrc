@@ -1,0 +1,63 @@
+######################
+# Quickly open files #
+######################
+
+# TODO: Fix systemctl and use it instead of calling sxhkd directly
+alt + x
+    st nvim ~/.config/sxhkd/sxhkdrc ;\
+    pkill sxhkd ;\
+    sxhkd &\
+    notify-send "sxhkd restarted"
+
+# TODO: replace this with doom emacs
+alt + t
+    st nvim ~/sync/org/1.todo.org
+
+##################
+# Power commands #
+##################
+
+alt + shift + s
+    shutdown now
+
+alt + shift + r
+    reboot
+
+###################
+# Volume controls #
+###################
+
+alt + plus
+    amixer -c 0 sset Master 5%+
+
+alt + minus
+    amixer -c 0 sset Master 5%-
+
+alt + m
+    ~/bin/toggle-sound
+
+#################################
+# Things for live screencapture #
+#################################
+
+# TODO: Try to make this the same binding that is used for recording and see what happens
+alt + ctrl + i
+    auto-timestamps -i
+
+alt + ctrl + u
+    auto-timestamps new
+
+alt + ctrl + n
+    auto-timestamps new $(spawn-terminal-prompt "Name upcoming chapter: ")
+
+alt + ctrl + r
+    LAST_TIMESTAMP=$(auto-timestamps get-current duration) ;\
+    NAME=editor-prompt "Name chapter created $LAST_TIMESTAMP ago: " ;\
+    auto-timestamps set-current name "$NAME"
+
+########################
+# Reserved for testing #
+########################
+
+alt + shift + t
+    notify-send "Test"
