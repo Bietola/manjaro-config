@@ -4,14 +4,27 @@
 
 # TODO: Fix systemctl and use it instead of calling sxhkd directly
 alt + x
-    st nvim ~/.config/sxhkd/sxhkdrc ;\
+    spawn-term nvim ~/.config/sxhkd/sxhkdrc ;\
     pkill sxhkd ;\
     sxhkd &\
     notify-send "sxhkd restarted"
 
 # TODO: replace this with doom emacs
 alt + t
-    st nvim ~/sync/org/1.todo.org
+    emacs ~/sync/org/1.todo.org
+
+###########################
+# Quickly launch programs #
+###########################
+
+alt + q
+    qutebrowser
+
+alt + f
+    firefox
+
+alt + r
+    "$TERMINAL" ranger
 
 ##################
 # Power commands #
@@ -28,13 +41,18 @@ alt + shift + r
 ###################
 
 alt + plus
-    amixer -c 0 sset Master 5%+
+    amixer -c 0 sset Master 5%+ ;\
+    notify-send -t 1000 "volume: $(~/bin/show-vol 0 Master)"
 
 alt + minus
-    amixer -c 0 sset Master 5%-
+    amixer -c 0 sset Master 5%- ;\
+    notify-send -t 1000 "volume: $(~/bin/show-vol 0 Master)"
 
 alt + m
     ~/bin/toggle-sound
+
+alt + s
+    notify-send "$(~/bin/toggle-sound-source | tail -n1)"
 
 #################################
 # Things for live screencapture #
@@ -55,9 +73,24 @@ alt + ctrl + r
     NAME=editor-prompt "Name chapter created $LAST_TIMESTAMP ago: " ;\
     auto-timestamps set-current name "$NAME"
 
+###############
+# Credentials #
+###############
+
+alt + p
+    pmenu
+
 ########################
 # Reserved for testing #
 ########################
 
 alt + shift + t
-    notify-send "Test"
+    notify-send "Hello there"
+
+#############
+# Temporary #
+#############
+
+alt + shift + d
+    ~/bin/dati ;\
+    notify-send "Data saved"

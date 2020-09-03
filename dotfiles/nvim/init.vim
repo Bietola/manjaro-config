@@ -5,8 +5,6 @@
 call plug#begin('~/.local/share/nvim/plugged')
 
 " plugins
-Plug 'hrsh7th/vim-vsnip-integ'
-Plug 'hrsh7th/vim-vsnip'
 Plug 'mattn/vim-lsp-settings'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
@@ -15,7 +13,6 @@ Plug 'prabirshrestha/vim-lsp'
 Plug 'daveyarwood/vim-alda'
 Plug 'calincru/flex-bison-syntax'
 Plug 'ron-rs/ron.vim'
-Plug 'alx741/vim-hindent'
 Plug 'AndrewRadev/dsf.vim'
 Plug 'runoshun/vim-alloy'
 Plug 'guns/vim-sexp'
@@ -78,10 +75,8 @@ endif
 " window splitting shortcuuts
 noremap <C-w>V <C-w>v<C-w><C-l>
 noremap <C-w>S <C-w>s<C-w><C-j>
-noremap <C-j> <C-w><C-j>
-noremap <C-k> <C-w><C-k>
-noremap <C-h> <C-w><C-h>
-noremap <C-l> <C-w><C-l>
+noremap <C-j> <C-w>w
+noremap <C-k> <C-w>W
 
 " window splitting options
 set diffopt+=vertical
@@ -231,29 +226,6 @@ let g:ycm_collect_identifiers_from_tags_files = 1
 
 " No floating hint box
 
-""""""""""""""""""
-" vsnip settings "
-"                "
-""""""""""""""""""
-" All snippets are in this directory.
-" TODO: Use `XDG_CONFIG_HOME` in path (set it in `/ect/profile`).
-let g:vsnip_snippet_dir = "/home/dincio/.config/nvim/snippets"
-
-" Keybindings.
-"! imap <expr> <C-j>   vsnip#available(1)  ? '<Plug>(vsnip-expand)'         : '<C-j>'
-"! imap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
-"! smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
-imap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-imap <expr> <C-h>   vsnip#available(-1) ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-smap <expr> <C-h>   vsnip#available(-1) ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-
-" TODO: find out better way to do this
-" NB. Ultisnips is not compatible with neovim... so we need to use the .vim
-" directory
-set runtimepath^=~/.vim
-let g:UltiSnipsSnippetsDirectories=[$HOME.'/.vim/UltiSnips']
-
 " vim-slime options
 let g:slime_target = "neovim"
 
@@ -359,20 +331,21 @@ au FileType python set autoindent
 " LSP Autocompletion with tab.
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
+
+" Custom Hindent command
+" TODO: Fix the real one...
 
 """""""""""""""""""""""""""""
-" Haskell specific settings "
+" Utility terminal commands "
 """""""""""""""""""""""""""""
 
-" Hindent
-au filetype haskell let g:hindent_on_save = 0
-
-" utility leader commands
 nnoremap <leader>to <C-W>o<C-W>j:term<cr>
 nnoremap <leader>tv <C-W>v<C-W>l:term<cr>
 nnoremap <leader>tw <leader>to
 nnoremap <leader>tt :tabnew<cr>:term<cr>
+" TODO: Make this cross-compatible with all terminals by using
+" ~/bin/spawn-term
+nnoremap <leader>tp :!"$TERMINAL" --working-directory "$PWD" &<cr>
 nnoremap <leader>tn :tabnew<cr>
 
 " quick vimgrep command
@@ -406,66 +379,101 @@ function! LyPlay(type)
 endfunction
 
 
-" LSP general keybindings
+"""""""""""""""""""""""""""
+" LSP default keybindings "
+"""""""""""""""""""""""""""
+
 nnoremap <leader>hv :LspHover<cr>
 nnoremap <leader>rf :LspReference<cr>
 noremap <leader>rn :LspRename<cr>
-noremap <leader>fm :RustFmt<cr>
+noremap <leader>fm :LspDocumentFormat<cr>
 noremap <leader>er :LspDocumentDiagnostics<cr>
 noremap <leader>gd :LspDefinition<cr>
 noremap <leader>gr :LspReferences<cr>
 
-"" Sh keybindings
+"""""""""
+" Shell "
+"""""""""
+
 au filetype sh vnoremap <leader>b :'<,'>!boxes -d shell<cr>
 au filetype sh nnoremap <leader>bb V:'<,'>!boxes -d shell<cr>
 au filetype sh nnoremap <leader>bm vip:'<,'>!boxes -d shell -m<cr>
 
-"" Rust keybindings
+""""""""
+" Rust "
+""""""""
+
 " Cargo
 au filetype rust nnoremap <leader><leader>r :!cargo run<cr>
 au filetype rust nnoremap <leader><leader>t :!cargo test<cr>
+
 " Boxes
 au filetype rust vnoremap <leader>b :'<,'>!boxes<cr>
 au filetype rust nnoremap <leader>bb V:'<,'>!boxes<cr>
 au filetype rust nnoremap <leader>bm vip:'<,'>!boxes -m<cr>
 au filetype rust nnoremap <leader>vg :Vimgrep 
+
 " Other useful keybindings
 au filetype rust nnoremap <leader>vi :args src/**<cr>
 
-"" C keybindings
+"""""
+" C "
+"""""
 au filetype c inoremap <c-c> <esc>:!gcc main.c<cr>i
 
-"" Racket keybindings
+""""""""""
+" Racket "
+""""""""""
+
 " Slime
 au filetype racket nnoremap <leader>tt :vsp<cr>:term racket<cr>:echo b:terminal_job_id<cr><c-w><c-l>
 au filetype racket nnoremap <leader>fm :LspDocumentFormat<cr>
 
-"" Haskell keybindings
+"""""""""""
+" Haskell "
+"""""""""""
+
 " Slime
 au filetype haskell nnoremap <leader>trw :vsp<cr>:term ghci<cr>:echo b:terminal_job_id<cr><c-w><c-l>
 au filetype haskell nnoremap <leader>trt :tabnew<cr>:term ghci<cr>:echo b:terminal_job_id<cr>gT
+
+" Formatting
+au filetype haskell nnoremap <leader>fm :!hindent %<cr>:e<cr>
+au filetype haskell vnoremap <leader>fm :!hindent<cr>
+
 " Comments
 au filetype haskell vnoremap <leader>b :'<,'>!boxes -d ada-box<cr>
 au filetype haskell vnoremap <leader>bm V:'<,'>!boxes -m<cr>
 au filetype haskell nnoremap <leader>bb V:'<,'>!boxes -d ada-box<cr>
-" Automatic formatting
-au filetype haskell nnoremap <leader>fm :Hindent<cr>
+
 " Tabular
 au filetype haskell nnoremap <leader>t= :Tabular /=<cr>
 
-" Git fugitive custom commands
-command GA Git A
+""""""""""
+" Scheme "
+""""""""""
 
-" Ranger configuration
-let g:ranger_replace_netrw = 1 "open ranger when vim open a directory
-
-" Scheme stuff
-" Local leader.
-autocmd FileType scheme let maplocalleader = "ò"
-" TODO: try w/ localleader
+" Mistery command...
+" TODO: Understand what it does...
 nnoremap <leader>a mmggVG:SlimeSend<cr>'m
 
-" Lance stuff
-" NB. Lance is an educational language for the Formal Languages course at
-" Polimi
+"""""""""
+" Lance "
+"""""""""
+" NB. Lance is an educational language for the Formal Languages course at Polimi
+
 autocmd FileType lance set syntax = lua
+
+""""""""""""""""
+" Git Fugitive "
+""""""""""""""""
+
+" Custom commands
+command GA Git A
+
+""""""""""
+" Ranger "
+""""""""""
+
+" Open ranger when vim open a directory
+let g:ranger_replace_netrw = 1 

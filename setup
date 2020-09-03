@@ -39,7 +39,11 @@ if [[ "$1" == "user" ]]; then
         exit 1
     fi
 
-    USR_HOME="/home/$2"
+    if [[ "$2" == "root" ]]; then
+        USR_HOME="/root"
+    else
+        USR_HOME="/home/$2"
+    fi
     CONF_REP="$USR_HOME/config"
     CONF_HOME="$USR_HOME/.config"
 # Normal usage: all paths meticulously specified.
@@ -84,24 +88,44 @@ function dolink() {
 
 # Even more buffed symlink function (does heavylifting)
 function lncfg() {
+    # Parse options
+    while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
+        -h | --hardcopy )
+            # TODO Implement this
+            # TODO do_hardcopy=$TRUE
+
+            echo "Hardcopy not yet implemented; skipping \"lncfg $@\""
+            return 0
+            ;;
+        *)
+            err="Unspecified flag to function *lncfg*: $1"
+            return 1
+            ;;
+    esac; shift; done
+    [[ "$1" == '--' ]] && shift
+
     # Collect args
-    dest_type="$1"
+    dest_specifier="$1"
     unit_name="$2"
 
     # Determine origin of config unit (unit is shorthand for file/directory)
     orig="$CONF_REP/$unit_name"
 
     # Determine destination of config unit
-    case "$dest_type" in
-        h)
+    case "$dest_specifier" in
+        # Parse shorthands
+        ":h")
             dest="$USR_HOME/$unit_name"
             ;;
-        c)
+        ":c")
             dest="$CONF_HOME/$unit_name"
             ;;
+        ":e")
+            dest="/etc/$unit_name"
+            ;;
+        # Parse as full path
         *)
-            ERR="Invalid destination type ($dest_type)"
-            return 1
+            dest="$dest_specifier"
             ;;
     esac
 
@@ -137,21 +161,43 @@ function lncfg() {
     fi
 }
 
+function lncfge() {
+    lncfg $@ || error
+}
+
 #####################################################################
 # Symlink configuration directories/files to their proper locations #
 #####################################################################
 
+# bashrc
+lncfge :h ".bashrc"
+
+# wpa_supplicant
+# NB. contains info (pw and ssid) for connecting to wifi network
+lncfge -h /etc/wpa_supplicant wpa_supplicant-wlan0.conf
+
+# blacklisted modules
+# NB. this is for making sound work, for **linux-sof** modules to make the mic work, older sound modules
+#     need to be blacklisted.
+lncfge -h :e modprobe.d
+
+# Modified to make realtime audio support possible
+lncfge -h /etc/security limits.conf
+
 # neovim
-lncfg c nvim || error 
+lncfge :c nvim
 
 # ranger
-lncfg c ranger || error
+lncfge :c ranger
 
 # sxhkd
-lncfg c sxhkd || error
+lncfge :c sxhkd
 
 # xmonad
-lncfg h ".xmonad" || error
+lncfge :h ".xmonad"
 
 # qutebrowser
-lncfg c qutebrowser || error
+lncfge :c qutebrowser
+
+# haskeline
+lncfge :h ".haskeline"
