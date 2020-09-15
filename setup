@@ -174,7 +174,7 @@ lncfge :h ".bashrc"
 
 # wpa_supplicant
 # NB. contains info (pw and ssid) for connecting to wifi network
-lncfge -h /etc/wpa_supplicant wpa_supplicant-wlan0.conf
+lncfge -h :e wpa_supplicant
 
 # blacklisted modules
 # NB. this is for making sound work, for **linux-sof** modules to make the mic work, older sound modules

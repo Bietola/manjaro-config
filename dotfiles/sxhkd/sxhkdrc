@@ -9,7 +9,6 @@ alt + x
     sxhkd &\
     notify-send "sxhkd restarted"
 
-# TODO: replace this with doom emacs
 alt + t
     emacs ~/sync/org/1.todo.org
 
@@ -24,7 +23,10 @@ alt + f
     firefox
 
 alt + r
-    "$TERMINAL" ranger
+    "$TERMINAL" -e ranger
+
+super + t
+    dmenu ~/drill
 
 ##################
 # Power commands #
@@ -35,6 +37,22 @@ alt + shift + s
 
 alt + shift + r
     reboot
+
+#######################
+# Brightness controls #
+#######################
+
+alt + ctrl + plus
+    set-brightness +10
+
+alt + ctrl + minus
+    set-brightness -10
+
+alt + ctrl + m
+    set-brightness 0
+
+alt + ctrl + M
+    set-brightness 100
 
 ###################
 # Volume controls #

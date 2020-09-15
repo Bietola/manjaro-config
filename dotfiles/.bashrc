@@ -11,12 +11,6 @@ PS1='[\u@\h \W]\$ '
 # Vim is a good program
 set -o vi
 
-########
-# Path #
-########
-
-export PATH="~/bin:~/.emacs.d/bin:~/.cargo/bin:~/.local/bin:$PATH"
-
 ###########
 # Aliases #
 ###########
@@ -34,11 +28,11 @@ alias computer-info='neofecth'
 alias power='acpi'
 
 # Installing things is a recurrent endeavour...
-alias i='yay -Syu'
+alias fi='yay -S'
+alias si='yay -Syu'
 alias r='yay -Rsn'
 alias s='yay -Ss'
 alias q='yay -Q'
-alias f='yay -S'
 
 # Always send things to X clipboard
 alias xclip="xclip -selection clipboard"

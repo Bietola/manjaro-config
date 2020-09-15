@@ -143,6 +143,7 @@ au filetype vim nnoremap <leader>bb V:'<,'>!boxes -d vim-box<cr>
 set background=dark
 set termguicolors
 colorscheme iceberg
+noremap <leader>m :colorscheme morning<cr>
 set guifont=Consolas:h17
 
 " tab (those akin to windows...) settings and custom commands
@@ -154,27 +155,10 @@ set tabstop=4
 set shiftwidth=4
 set backspace=indent,eol,start
 
-" fancy lines numbers
-" turn hybrid line numbers on
-" :set number relativenumber
-" :set nu rnu
-" turn hybrid line numbers off
-" :set nonumber norelativenumber
-" :set nonu nornu
-" toggle hybrid line numbers
-" :set number! relativenumber!
-" :set nu! rnu!
-
 " default syntax
 syntax on
 set syntax=cpp
 filetype plugin indent on
-
-" ctags and vim-tags settings
-let g:vim_tags_auto_generate = 1
-let g:vim_tags_directories = [".git/..", ".hg", ".svn", ".bzr", "_darcs", "CVS"]
-let g:vim_tags_ignore_files = ['.gitignore', '.svnignore', '.cvsignore']
-let g:vim_tags_project_tags_command = "{CTAGS} -R --fields=+l {OPTIONS} {DIRECTORY} 2>/dev/null"
 
 " default path
 set path+=../**
@@ -221,7 +205,6 @@ let g:ycm_collect_identifiers_from_tags_files = 1
 
 """""""""""""""""""""""""""
 " async complete settings "
-"                         "
 """""""""""""""""""""""""""
 
 " No floating hint box
@@ -306,11 +289,6 @@ au FileType lisp set expandtab
 au FileType lisp set tabstop=2
 au FileType lisp set shiftwidth=2
 
-" haskell formatting settings
-au FileType haskell set expandtab
-au FileType haskell set tabstop=2
-au FileType haskell set shiftwidth=2
-
 " racket formatting settings
 au FileType racket let b:delimitMate_quotes = "\""
 
@@ -348,6 +326,9 @@ nnoremap <leader>tt :tabnew<cr>:term<cr>
 nnoremap <leader>tp :!"$TERMINAL" --working-directory "$PWD" &<cr>
 nnoremap <leader>tn :tabnew<cr>
 
+" Quickly navigate to previous prompt
+nnoremap <leader>p /^[dincio@dincio<cr>G$NN
+
 " quick vimgrep command
 command -nargs=1 Vimgrep vimgrep <args> ##
 " NB: this initialization is customized for different languages
@@ -361,7 +342,7 @@ au filetype lilypond nnoremap <leader>c :w<cr>:!lilypond %<cr>
 " View pdf associated with current file
 au filetype lilypond nnoremap <leader>v :!zathura %:r.pdf &<cr>
 " play selected notes
-au filetype lilypond nnoremap <leader>p :set opfunc=LyPlay<CR>g@
+au filetype lilypond nnoremap <leader>P :set opfunc=LyPlay<CR>g@
 " TODO: vmap <silent> <F4> :<C-U>call CountSpaces(visualmode(), 1)<CR>
 " function to do heavy lifting
 function! LyPlay(type)
@@ -391,6 +372,11 @@ noremap <leader>er :LspDocumentDiagnostics<cr>
 noremap <leader>gd :LspDefinition<cr>
 noremap <leader>gr :LspReferences<cr>
 
+" Boxes comments
+vnoremap <leader>b :'<,'>!boxes<cr>
+nnoremap <leader>bb V:'<,'>!boxes<cr>
+nnoremap <leader>bm vip:'<,'>!boxes -m<cr>
+
 """""""""
 " Shell "
 """""""""
@@ -413,6 +399,9 @@ au filetype rust nnoremap <leader>bb V:'<,'>!boxes<cr>
 au filetype rust nnoremap <leader>bm vip:'<,'>!boxes -m<cr>
 au filetype rust nnoremap <leader>vg :Vimgrep 
 
+" Formatting (LspDocumentFormat does not work...)
+au filetype rust nnoremap <leader>fm :RustFmt<cr>
+
 " Other useful keybindings
 au filetype rust nnoremap <leader>vi :args src/**<cr>
 
@@ -433,11 +422,13 @@ au filetype racket nnoremap <leader>fm :LspDocumentFormat<cr>
 " Haskell "
 """""""""""
 
-" Slime
-au filetype haskell nnoremap <leader>trw :vsp<cr>:term ghci<cr>:echo b:terminal_job_id<cr><c-w><c-l>
-au filetype haskell nnoremap <leader>trt :tabnew<cr>:term ghci<cr>:echo b:terminal_job_id<cr>gT
+" Terminal utility mappings
+nnoremap <leader>P /^Prelude<cr>G$NN
 
-" Formatting
+" LSP
+let g:lsp_settings_filetype_haskell = 'haskell-ide-engine'
+
+" Auto-formatter/Prettifier
 au filetype haskell nnoremap <leader>fm :!hindent %<cr>:e<cr>
 au filetype haskell vnoremap <leader>fm :!hindent<cr>
 
@@ -445,6 +436,10 @@ au filetype haskell vnoremap <leader>fm :!hindent<cr>
 au filetype haskell vnoremap <leader>b :'<,'>!boxes -d ada-box<cr>
 au filetype haskell vnoremap <leader>bm V:'<,'>!boxes -m<cr>
 au filetype haskell nnoremap <leader>bb V:'<,'>!boxes -d ada-box<cr>
+
+" Slime
+au filetype haskell nnoremap <leader>trw :vsp<cr>:term ghci<cr>:echo b:terminal_job_id<cr><c-w><c-l>
+au filetype haskell nnoremap <leader>trt :tabnew<cr>:term ghci<cr>:echo b:terminal_job_id<cr>gT
 
 " Tabular
 au filetype haskell nnoremap <leader>t= :Tabular /=<cr>
@@ -469,7 +464,11 @@ autocmd FileType lance set syntax = lua
 """"""""""""""""
 
 " Custom commands
-command GA Git A
+function GAddAndGit()
+    :Git A
+    :Git
+endfunction
+command A exec GAddAndGit()
 
 """"""""""
 " Ranger "
