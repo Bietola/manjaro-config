@@ -42,17 +42,14 @@ alt + shift + r
 # Brightness controls #
 #######################
 
+alt + ctrl + shift + plus
+    set-brightness 100
+
 alt + ctrl + plus
     set-brightness +10
 
 alt + ctrl + minus
     set-brightness -10
-
-alt + ctrl + m
-    set-brightness 0
-
-alt + ctrl + M
-    set-brightness 100
 
 ###################
 # Volume controls #
