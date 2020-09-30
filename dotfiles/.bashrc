@@ -8,8 +8,15 @@
 alias ls='ls --color=auto'
 PS1='[\u@\h \W]\$ '
 
+#################
+# Basic options #
+#################
+
 # Vim is a good program
 set -o vi
+
+# Use <c-s> to go forward in reverse-i-search(es)
+stty -ixon
 
 ###########
 # Aliases #
@@ -22,7 +29,7 @@ alias sudo='sudo '
 alias cpp='rsync -ah --progress'
 
 # pfetch is hard to remember...
-alias computer-info='neofecth'
+alias computer-info='neofetch'
 
 # For when everything is dieing
 alias power='acpi'
@@ -39,6 +46,9 @@ alias xclip="xclip -selection clipboard"
 
 # Bash is tedious enough on its own
 alias cx="chmod +x"
+
+# In case of the immediate need of moral guidance.
+alias real="zathura ~/books/music/the-real-book.pdf"
 
 # Egocentric git clone
 function glone() {

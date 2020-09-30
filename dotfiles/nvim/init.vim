@@ -5,21 +5,18 @@
 call plug#begin('~/.local/share/nvim/plugged')
 
 " plugins
-Plug 'mattn/vim-lsp-settings'
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/vim-lsp'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'hrsh7th/vim-vsnip'
 Plug 'daveyarwood/vim-alda'
 Plug 'calincru/flex-bison-syntax'
 Plug 'ron-rs/ron.vim'
+Plug 'alx741/vim-hindent'
 Plug 'AndrewRadev/dsf.vim'
 Plug 'runoshun/vim-alloy'
 Plug 'guns/vim-sexp'
 Plug 'tpope/vim-sexp-mappings-for-regular-people'
 Plug 'rbgrouleff/bclose.vim'
 Plug 'francoiscabrol/ranger.vim'
-Plug 'masukomi/vim-markdown-folding'
 Plug 'rust-lang/rust.vim'
 Plug 'tommcdo/vim-exchange'
 Plug 'gyim/vim-boxdraw'
@@ -40,9 +37,6 @@ Plug 'AndrewRadev/sideways.vim'
 Plug 'majutsushi/tagbar'
 Plug 'thaerkh/vim-workspace'
 Plug 'godlygeek/tabular'
-" Plug 'vim-pandoc/vim-pandoc'
-" Plug 'vim-pandoc/vim-pandoc-syntax'
-Plug 'plasticboy/vim-markdown'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'kien/ctrlp.vim'
@@ -66,17 +60,22 @@ call plug#end()
 " vimrc loading stuff
 set exrc
 
+" General terminal commands.
+nnoremap <leader>tw :!st &<cr>
+
 " nvim :terminal suff
 if has("nvim")
-  tnoremap <ESC><ESC> <C-\><C-n>
-  "! tnoremap jk <C-\><C-n> " RIP (need caps lock for ranger)
+inoremap <ESC> <C-\><C-n>
+"! tnoremap jk <C-\><C-n> " RIP (need caps lock for ranger)
 endif
 
 " window splitting shortcuuts
 noremap <C-w>V <C-w>v<C-w><C-l>
 noremap <C-w>S <C-w>s<C-w><C-j>
-noremap <C-j> <C-w>w
-noremap <C-k> <C-w>W
+noremap <C-j> <C-w><C-j>
+noremap <C-k> <C-w><C-k>
+noremap <C-h> <C-w><C-h>
+noremap <C-l> <C-w><C-l>
 
 " window splitting options
 set diffopt+=vertical
@@ -119,6 +118,17 @@ if g:os == "Linux"
 command -bar -nargs=1 VCMake !cmake -DCMAKE_TOOLCHAIN_FILE=/usr/pkg/vcpkg/scripts/buildsystems/vcpkg.cmake <args>
 end
 
+" autocomplete settings
+set complete-=i
+" suggested by mu complete
+set completeopt+=menuone
+set completeopt+=noselect
+set shortmess+=c
+set belloff+=ctrlg
+
+" mucompolete-specific settings
+let g:mucomplete#enable_auto_at_startup = 1
+
 " ctrl settings
 let g:ctrlp_show_hidden = 1
 
@@ -136,15 +146,14 @@ nnoremap <leader>h :SidewaysLeft<CR>
 nnoremap <leader>l :SidewaysRight<CR>
 " vimrc management
 " TODO: Make a boxes related plugin
-au filetype vim vnoremap <leader>b :'<,'>!boxes -d vim-box<cr>
-au filetype vim nnoremap <leader>bb V:'<,'>!boxes -d vim-box<cr>
+au filetype vim vnoremap <leader>b :'<,'>!boxes -d vim<cr>
 
 " terminal looks
 set background=dark
 set termguicolors
 colorscheme iceberg
-noremap <leader>m :colorscheme morning<cr>
 set guifont=Consolas:h17
+nnoremap <leader>m :colorscheme morning<cr>
 
 " tab (those akin to windows...) settings and custom commands
 au TabEnter * if exists("t:wd") | exe "cd" t:wd | endif
@@ -155,10 +164,27 @@ set tabstop=4
 set shiftwidth=4
 set backspace=indent,eol,start
 
+" fancy lines numbers
+" turn hybrid line numbers on
+" :set number relativenumber
+" :set nu rnu
+" turn hybrid line numbers off
+" :set nonumber norelativenumber
+" :set nonu nornu
+" toggle hybrid line numbers
+" :set number! relativenumber!
+" :set nu! rnu!
+
 " default syntax
 syntax on
 set syntax=cpp
 filetype plugin indent on
+
+" ctags and vim-tags settings
+let g:vim_tags_auto_generate = 1
+let g:vim_tags_directories = [".git/..", ".hg", ".svn", ".bzr", "_darcs", "CVS"]
+let g:vim_tags_ignore_files = ['.gitignore', '.svnignore', '.cvsignore']
+let g:vim_tags_project_tags_command = "{CTAGS} -R --fields=+l {OPTIONS} {DIRECTORY} 2>/dev/null"
 
 " default path
 set path+=../**
@@ -169,9 +195,6 @@ set number
 
 " no idea... (should research)
 set timeoutlen=10000
-
-" Sensible clipboard behaviour.
-set clipboard=unnamedplus
 
 " utility remappings
 " imap jk <Esc> " RIP (need caps lock for ranger)
@@ -203,11 +226,28 @@ let g:ycm_auto_trigger = 0
 let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
 let g:ycm_collect_identifiers_from_tags_files = 1
 
-"""""""""""""""""""""""""""
-" async complete settings "
-"""""""""""""""""""""""""""
+""""""""""""""""""
+" vsnip settings "
+"                "
+""""""""""""""""""
+" All snippets are in this directory.
+" TODO: Use `XDG_CONFIG_HOME` in path (set it in `/ect/profile`).
+let g:vsnip_snippet_dir = "/home/dincio/.config/nvim/snippets"
 
-" No floating hint box
+" Keybindings.
+"! imap <expr> <C-j>   vsnip#available(1)  ? '<Plug>(vsnip-expand)'         : '<C-j>'
+"! imap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
+"! smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
+imap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
+smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
+imap <expr> <C-h>   vsnip#available(-1) ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
+smap <expr> <C-h>   vsnip#available(-1) ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
+
+" TODO: find out better way to do this
+" NB. Ultisnips is not compatible with neovim... so we need to use the .vim
+" directory
+set runtimepath^=~/.vim
+let g:UltiSnipsSnippetsDirectories=[$HOME.'/.vim/UltiSnips']
 
 " vim-slime options
 let g:slime_target = "neovim"
@@ -289,6 +329,11 @@ au FileType lisp set expandtab
 au FileType lisp set tabstop=2
 au FileType lisp set shiftwidth=2
 
+" haskell formatting settings
+au FileType haskell set expandtab
+au FileType haskell set tabstop=2
+au FileType haskell set shiftwidth=2
+
 " racket formatting settings
 au FileType racket let b:delimitMate_quotes = "\""
 
@@ -302,32 +347,16 @@ au FileType python set shiftwidth=4
 au FileType python set sts=4
 au FileType python set autoindent
 
-""""""""""""""""
-" LSP settings "
-""""""""""""""""
-
-" LSP Autocompletion with tab.
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
-" Custom Hindent command
-" TODO: Fix the real one...
-
 """""""""""""""""""""""""""""
-" Utility terminal commands "
+" Haskell specific settings "
 """""""""""""""""""""""""""""
 
-nnoremap <leader>to <C-W>o<C-W>j:term<cr>
-nnoremap <leader>tv <C-W>v<C-W>l:term<cr>
-nnoremap <leader>tw <leader>to
+" Hindent
+au filetype haskell let g:hindent_on_save = 0
+
+" utility leader commands
 nnoremap <leader>tt :tabnew<cr>:term<cr>
-" TODO: Make this cross-compatible with all terminals by using
-" ~/bin/spawn-term
-nnoremap <leader>tp :!"$TERMINAL" --working-directory "$PWD" &<cr>
 nnoremap <leader>tn :tabnew<cr>
-
-" Quickly navigate to previous prompt
-nnoremap <leader>p /^[dincio@dincio<cr>G$NN
 
 " quick vimgrep command
 command -nargs=1 Vimgrep vimgrep <args> ##
@@ -342,7 +371,7 @@ au filetype lilypond nnoremap <leader>c :w<cr>:!lilypond %<cr>
 " View pdf associated with current file
 au filetype lilypond nnoremap <leader>v :!zathura %:r.pdf &<cr>
 " play selected notes
-au filetype lilypond nnoremap <leader>P :set opfunc=LyPlay<CR>g@
+au filetype lilypond nnoremap <leader>p :set opfunc=LyPlay<CR>g@
 " TODO: vmap <silent> <F4> :<C-U>call CountSpaces(visualmode(), 1)<CR>
 " function to do heavy lifting
 function! LyPlay(type)
@@ -360,119 +389,58 @@ function! LyPlay(type)
 endfunction
 
 
-"""""""""""""""""""""""""""
-" LSP default keybindings "
-"""""""""""""""""""""""""""
 
-nnoremap <leader>hv :LspHover<cr>
-nnoremap <leader>rf :LspReference<cr>
-noremap <leader>rn :LspRename<cr>
-noremap <leader>fm :LspDocumentFormat<cr>
-noremap <leader>er :LspDocumentDiagnostics<cr>
-noremap <leader>gd :LspDefinition<cr>
-noremap <leader>gr :LspReferences<cr>
-
-" Boxes comments
-vnoremap <leader>b :'<,'>!boxes<cr>
-nnoremap <leader>bb V:'<,'>!boxes<cr>
-nnoremap <leader>bm vip:'<,'>!boxes -m<cr>
-
-"""""""""
-" Shell "
-"""""""""
-
-au filetype sh vnoremap <leader>b :'<,'>!boxes -d shell<cr>
-au filetype sh nnoremap <leader>bb V:'<,'>!boxes -d shell<cr>
-au filetype sh nnoremap <leader>bm vip:'<,'>!boxes -d shell -m<cr>
-
-""""""""
-" Rust "
-""""""""
-
+"" Rust keybindings
 " Cargo
 au filetype rust nnoremap <leader><leader>r :!cargo run<cr>
 au filetype rust nnoremap <leader><leader>t :!cargo test<cr>
-
 " Boxes
 au filetype rust vnoremap <leader>b :'<,'>!boxes<cr>
 au filetype rust nnoremap <leader>bb V:'<,'>!boxes<cr>
 au filetype rust nnoremap <leader>bm vip:'<,'>!boxes -m<cr>
 au filetype rust nnoremap <leader>vg :Vimgrep 
-
-" Formatting (LspDocumentFormat does not work...)
-au filetype rust nnoremap <leader>fm :RustFmt<cr>
-
 " Other useful keybindings
 au filetype rust nnoremap <leader>vi :args src/**<cr>
 
-"""""
-" C "
-"""""
+"" C keybindings
 au filetype c inoremap <c-c> <esc>:!gcc main.c<cr>i
 
-""""""""""
-" Racket "
-""""""""""
-
+"" Racket keybindings
 " Slime
 au filetype racket nnoremap <leader>tt :vsp<cr>:term racket<cr>:echo b:terminal_job_id<cr><c-w><c-l>
-au filetype racket nnoremap <leader>fm :LspDocumentFormat<cr>
+au filetype racket nnoremap <leader>fm :echo "WIP"<cr>
 
-"""""""""""
-" Haskell "
-"""""""""""
-
-" Terminal utility mappings
-nnoremap <leader>P /^Prelude<cr>G$NN
-
-" LSP
-let g:lsp_settings_filetype_haskell = 'haskell-ide-engine'
-
-" Auto-formatter/Prettifier
-au filetype haskell nnoremap <leader>fm :!hindent %<cr>:e<cr>
-au filetype haskell vnoremap <leader>fm :!hindent<cr>
-
+"" Haskell keybindings
+" Slime
+au filetype haskell nnoremap <leader>trw :vsp<cr>:term ghci<cr>:echo b:terminal_job_id<cr><c-w><c-l>
+au filetype haskell nnoremap <leader>trt :tabnew<cr>:term ghci<cr>:echo b:terminal_job_id<cr>gT
 " Comments
 au filetype haskell vnoremap <leader>b :'<,'>!boxes -d ada-box<cr>
 au filetype haskell vnoremap <leader>bm V:'<,'>!boxes -m<cr>
 au filetype haskell nnoremap <leader>bb V:'<,'>!boxes -d ada-box<cr>
-
-" Slime
-au filetype haskell nnoremap <leader>trw :vsp<cr>:term ghci<cr>:echo b:terminal_job_id<cr><c-w><c-l>
-au filetype haskell nnoremap <leader>trt :tabnew<cr>:term ghci<cr>:echo b:terminal_job_id<cr>gT
-
+" Automatic formatting
+au filetype haskell nnoremap <leader>fm :Hindent<cr>
 " Tabular
 au filetype haskell nnoremap <leader>t= :Tabular /=<cr>
 
-""""""""""
-" Scheme "
-""""""""""
+" Git fugitive custom commands
+command GA Git A
 
-" Mistery command...
-" TODO: Understand what it does...
+" Terminal stuff
+tnoremap <Esc> <C-\><C-n>
+
+" Scheme stuff
+" Local leader.
+autocmd FileType scheme let maplocalleader = "ò"
+" TODO: try w/ localleader
 nnoremap <leader>a mmggVG:SlimeSend<cr>'m
 
-"""""""""
-" Lance "
-"""""""""
-" NB. Lance is an educational language for the Formal Languages course at Polimi
-
+" Lance stuff
+" NB. Lance is an educational language for the Formal Languages course at
+" Polimi
 autocmd FileType lance set syntax = lua
 
-""""""""""""""""
-" Git Fugitive "
-""""""""""""""""
-
-" Custom commands
-function GAddAndGit()
-    :Git A
-    :Git
-endfunction
-command A exec GAddAndGit()
-
-""""""""""
-" Ranger "
-""""""""""
-
-" Open ranger when vim open a directory
-let g:ranger_replace_netrw = 1 
+" coc configuration
+if filereadable($HOME."/.config/nvim/coc.vim")
+    source ${HOME}/.config/nvim/coc.vim
+endif
