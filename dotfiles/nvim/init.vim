@@ -42,6 +42,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'kien/ctrlp.vim'
 
 " programming languages
+Plug 'OmniSharp/omnisharp-vim'
 Plug 'suoto/vim-hdl'
 Plug 'vim-perl/vim-perl6'
 Plug 'quabug/vim-gdscript'
@@ -228,7 +229,6 @@ let g:ycm_collect_identifiers_from_tags_files = 1
 
 """"""""""""""""""
 " vsnip settings "
-"                "
 """"""""""""""""""
 " All snippets are in this directory.
 " TODO: Use `XDG_CONFIG_HOME` in path (set it in `/ect/profile`).
@@ -439,6 +439,9 @@ nnoremap <leader>a mmggVG:SlimeSend<cr>'m
 " NB. Lance is an educational language for the Formal Languages course at
 " Polimi
 autocmd FileType lance set syntax = lua
+
+"" C#
+let g:OmniSharp_server_use_mono = 1
 
 " coc configuration
 if filereadable($HOME."/.config/nvim/coc.vim")

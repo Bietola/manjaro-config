@@ -9,12 +9,15 @@ super + x
     sxhkd &\
     notify-send "sxhkd restarted"
 
-super + t
+super + o
     emacs ~/sync/org/1.todo.org
 
 ###########################
 # Quickly launch programs #
 ###########################
+
+super + n
+    nautilus ~
 
 super + e
     emacs
@@ -27,9 +30,6 @@ super + f
 
 super + r
     "$TERMINAL" -e ranger
-
-super + t
-    dmenu ~/drill
 
 ##################
 # Power commands #
@@ -67,7 +67,7 @@ super + minus
     notify-send -t 1000 "volume: $(~/bin/show-vol 0 Master)"
 
 super + m
-    ~/bin/toggle-sound
+    ~/bin/toggle-sound-mute
 
 super + s
     notify-send "$(~/bin/toggle-sound-source | tail -n1)"

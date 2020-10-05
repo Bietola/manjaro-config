@@ -4,7 +4,6 @@ tele https://web.telegram.org/#/im
 pirate https://www.xn--thepratebay-fcb.com/
 yt-channel https://studio.youtube.com/channel/UChreBYMCDab47pFrNv5d5nA
 perlrun-cs https://perldoc.perl.org/perlrun.html
-polimi-streams-esercitazioni-economia https://web.microsoftstream.com/user/8b505922-a969-4bf3-b1dd-80be00914328
 work-ele https://web.microsoftstream.com/user/e1760f3a-9aa0-405c-89a1-46da125f359f
 work-eco-es https://web.microsoftstream.com/user/8b505922-a969-4bf3-b1dd-80be00914328
 audio-test https://www.youtube.com/watch?v=bnK3kh8ZEgA
@@ -39,11 +38,10 @@ euler https://projecteuler.net/archives
 polimail https://outlook.office365.com/mail/inbox
 google-security-hold https://accounts.google.com/signin/challenge/marl/sts?marl=ABHrDGR4Y1dbTh7Qfl4NTuSN-x8K33Eg_x-1ANVZZN0EtnlTBqyk57PQY9RvkraYIcIY1ObcF7N_LPyWwrRLqs-UrbOZxqsle7qkuAkjrTWPTs031mN_OA0jLMpv0zCGKRl2VvtZqGYi&hl=en
 poli-servizi-online https://servizionline.polimi.it/portaleservizi/portaleservizi/controller/Portale.do?jaf_currentWFID=main&EVN_SHOW_PORTALE=evento
-poli-orario https://www4.ceda.polimi.it/manifesti/manifesti/controller/ManifestoPublic.do?jaf_currentWFID=main&EVN_GOINTROCARRELLO=evento
 poli-tele-groups https://polinetwork.github.io/en/index.html
 latex-math-cs https://kapeli.com/cheat_sheets/LaTeX_Math_Symbols.docset/Contents/Resources/Documents/index
 poli-gd-master-file https://docs.google.com/document/d/1ODqhLNularJArAUsM_DvMTPM7IeFhjGJjiqeM6oh8no/edit
-kenney https://kenney.nl/
+kenney https://kenney.nl/assets
 emacs-adhd-tut https://github.com/gsforza/emacs-the-adhd-way#learn-emacs-the-adhd-way
 emacs-tut https://david.rothlis.net/emacs/customize_c.html
 unity-pacman-tut-1 https://www.youtube.com/watch?v=g2nLwdZKA0w
@@ -57,5 +55,10 @@ mtg-goldfish https://www.mtggoldfish.com/
 mtg-gf-pauper https://www.mtggoldfish.com/metagame/pauper#paper
 cockatrice-cs http://imtgapp.com/forum/index.php?topic=10107.0
 anki-connect-status http://localhost:8765/
-p4 https://politecnicomilano.webex.com/recordingservice/sites/politecnicomilano/recording/play/651223eaceac40d2a7accb22a188d86b
 vscode-unity https://code.visualstudio.com/docs/other/unity
+haskell-asteroids https://ocharles.org.uk/blog/posts/2013-08-18-asteroids-in-netwire.html
+unity-tut-spaceshooter https://www.youtube.com/watch?v=y1FSZHPBHT8&list=PLbghT7MmckI4IeNHkPm5bFJhY9GQ0anKN
+poli-eco-ese https://web.microsoftstream.com/user/8b505922-a969-4bf3-b1dd-80be00914328
+poli-orario https://www13.ceda.polimi.it/oralez/oralez/controller/MainDesktop.do?jaf_currentWFID=main&EVN_CONFERMA_TICKET=evento&al_id_srv=398&polij_device_category=PERSONAL_COMPUTER&al_id_srv_chiamante=376&lang=IT&lang=IT&returnURL=https%3A%2F%2Fservizionline.polimi.it%2Fportaleservizi%2Fportaleservizi%2Fcontroller%2FReturn.do%3Fjaf_currentWFID%3Dmain%26EVN_REENTER%3Devento%26__pj0%3D0%26__pj1%3Dea73560ba3e5d3ee6d2a2ab875c49672&polij_step=0&__pj0=0&__pj1=d01c0c246b7a7b8ca2bcf19142546313
+haskell-rl-lib https://github.com/LambdaHack/LambdaHack
+blogpost-rust-ecs https://kyren.github.io/2018/09/14/rustconf-talk.html
