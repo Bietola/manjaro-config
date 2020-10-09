@@ -169,26 +169,29 @@ function lncfge() {
 # Symlink configuration directories/files to their proper locations #
 #####################################################################
 
-# bashrc
-lncfge :h ".bashrc"
-
 # wpa_supplicant
 # NB. contains info (pw and ssid) for connecting to wifi network
-lncfge -h :e wpa_supplicant
+# lncfge -h :e wpa_supplicant
 
 # blacklisted modules
 # NB. this is for making sound work, for **linux-sof** modules to make the mic work, older sound modules
 #     need to be blacklisted.
-lncfge -h :e modprobe.d
+# lncfge -h :e modprobe.d
 
 # mkinitcpio
 #
 # Essential edits from original:
 #   - MODULES array changed to enable early KMS start for Intel Grpahics GPU (https://wiki.archlinux.org/index.php/Kernel_mode_setting#Early_KMS_start)
-lncfge -h :e mkinitcpio.conf
+# lncfge -h :e mkinitcpio.conf
 
 # Modified to make realtime audio support possible
-lncfge -h /etc/security limits.conf
+# lncfge -h /etc/security limits.conf
+
+# bashrc
+lncfge :h ".bashrc"
+
+# xprofile
+lncfge :h ".xprofile"
 
 # neovim
 lncfge :c nvim

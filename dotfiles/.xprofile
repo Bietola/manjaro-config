@@ -1,0 +1,12 @@
+# Vim is the wea
+setxkbmap -option caps:escape
+
+# Anything at the press of a key
+# TODO: find a way of using a systemd service
+sxhkd &
+
+# Blue light is evil
+redshift -O 3000
+
+# Evergreen trees are a staple at this point
+feh --bg-fill ~/sync/img/desktops/evergreen-tre.jpg

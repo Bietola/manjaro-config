@@ -1,22 +1,22 @@
-#
-# ~/.bashrc
-#
-
-# If not running interactively, don't do anything
-[[ $- != *i* ]] && return
-
-alias ls='ls --color=auto'
-PS1='[\u@\h \W]\$ '
-
 #################
 # Basic options #
 #################
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
 
 # Vim is a good program
 set -o vi
 
 # Use <c-s> to go forward in reverse-i-search(es)
 stty -ixon
+
+########
+# Path #
+########
+
+# Local bin folder
+PATH="~/bin:$PATH"
 
 ###########
 # Aliases #
@@ -40,6 +40,9 @@ alias si='yay -Syu'
 alias r='yay -Rsn'
 alias s='yay -Ss'
 alias q='yay -Q'
+
+# Color is good
+alias ls='ls --color=auto'
 
 # Always send things to X clipboard
 alias xclip="xclip -selection clipboard"
