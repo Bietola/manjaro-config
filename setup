@@ -193,6 +193,9 @@ lncfge :h ".bashrc"
 # xprofile
 lncfge :h ".xprofile"
 
+# gitconfig
+lncfge :h ".gitconfig"
+
 # neovim
 lncfge :c nvim
 

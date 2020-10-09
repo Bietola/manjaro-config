@@ -1,0 +1,9 @@
+[alias]
+	conf = config --global
+	s = status
+	A = add -A
+	c = commit
+	p = push
+[user]
+	email = dincio.montesi@gmail.com
+	name = Bietola
