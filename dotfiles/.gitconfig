@@ -7,3 +7,5 @@
 [user]
 	email = dincio.montesi@gmail.com
 	name = Bietola
+[credential]
+	helper = store
