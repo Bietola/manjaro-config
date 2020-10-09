@@ -18,6 +18,9 @@ stty -ixon
 # Local bin folder
 PATH="~/bin:$PATH"
 
+# Local bin folder
+PATH="~/.emacs.d/bin:$PATH"
+
 ###########
 # Aliases #
 ###########

@@ -35,10 +35,10 @@ super + r
 # Power commands #
 ##################
 
-super + shift + s
+alt + shift + s
     shutdown now
 
-super + shift + r
+alt + shift + r
     reboot
 
 #######################
