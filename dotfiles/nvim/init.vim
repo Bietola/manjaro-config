@@ -136,6 +136,9 @@ let g:ctrlp_show_hidden = 1
 " leader
 let mapleader = "ò"
 
+" Sensible clipboard defaults
+set clipboard=unnamedplus
+
 " useful mappings
 nnoremap <S-Enter> O<Esc>
 nnoremap <CR> o<Esc>

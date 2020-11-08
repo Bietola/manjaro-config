@@ -18,7 +18,7 @@ stty -ixon
 # Local bin folder
 PATH="~/bin:$PATH"
 
-# Local bin folder
+# Emacs bin folder
 PATH="~/.emacs.d/bin:$PATH"
 
 ###########
@@ -27,6 +27,9 @@ PATH="~/.emacs.d/bin:$PATH"
 
 # Explanation (accepted answer): https://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
 alias sudo='sudo '
+
+# vim is for boomers
+alias vim='nvim'
 
 # cp, but with progress
 alias cpp='rsync -ah --progress'

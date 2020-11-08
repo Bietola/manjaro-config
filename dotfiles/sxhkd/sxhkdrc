@@ -4,7 +4,7 @@
 
 # TODO: Fix systemctl and use it instead of calling sxhkd directly
 super + x
-    spawn-term nvim ~/.config/sxhkd/sxhkdrc ;\
+    ~/bin/spawn-term nvim ~/.config/sxhkd/sxhkdrc ;\
     pkill sxhkd ;\
     sxhkd &\
     notify-send "sxhkd restarted"
@@ -89,7 +89,7 @@ super + ctrl + u
     auto-timestamps new
 
 super + ctrl + n
-    auto-timestamps new $(spawn-terminal-prompt "Name upcoming chapter: ")
+    auto-timestamps new $(~/bin/spawn-terminal-prompt "Name upcoming chapter: ")
 
 super + ctrl + r
     LAST_TIMESTAMP=$(auto-timestamps get-current duration) ;\
@@ -101,7 +101,7 @@ super + ctrl + r
 ###############
 
 super + shift + p
-    pmenu
+    ~/bin/pmenu
 
 ########################
 # Reserved for testing #

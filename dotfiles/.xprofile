@@ -8,5 +8,8 @@ sxhkd &
 # Blue light is evil
 redshift -O 3000
 
+# Start clipboard history manager daemon
+anamnesis --start
+
 # Evergreen trees are a staple at this point
 feh --bg-fill ~/sync/img/desktops/evergreen-tre.jpg
