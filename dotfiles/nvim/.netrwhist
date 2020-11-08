@@ -1,6 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =4
-let g:netrw_dirhist_1='/home/dincio/.local/share/nvim/plugged'
-let g:netrw_dirhist_2='/home/dincio/code/and'
-let g:netrw_dirhist_3='/home/dincio'
-let g:netrw_dirhist_4='/home/dincio/tmp'

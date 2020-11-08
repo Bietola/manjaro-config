@@ -5,6 +5,7 @@
 	c = commit
 	p = push
 	b = branch
+	co = checkout
 [user]
 	email = dincio.montesi@gmail.com
 	name = Bietola
