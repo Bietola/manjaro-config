@@ -14,3 +14,5 @@
 	name = Bietola
 [credential]
 	helper = store
+[submodule]
+	recurse = true
