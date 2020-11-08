@@ -6,6 +6,9 @@
 	p = push
 	b = branch
 	co = checkout
+	sdiff = !git diff && git submodule foreach 'git diff'
+	spush = push --recurse-submodules=on-demand
+	supdate = submodule update --remote --merge
 [user]
 	email = dincio.montesi@gmail.com
 	name = Bietola

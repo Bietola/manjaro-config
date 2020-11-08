@@ -63,7 +63,12 @@ alias real="zathura ~/books/music/the-real-book.pdf"
 function glone() {
     rep=${1:?"Usage: glone REPOSITORY"}
 
-    git clone "https://www.github.com/Bietola/$rep"
+    # $2 is destination
+    if [[ -z $2 ]]; then
+        git clone --recurse-submodules "https://www.github.com/Bietola/$rep"
+    else
+        git clone --recurse-submodules "https://www.github.com/Bietola/$rep" $2
+    fi
 }
 
 # Show public ip address
