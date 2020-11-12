@@ -193,6 +193,10 @@ lncfge :h ".bashrc"
 # xprofile
 lncfge :h ".xprofile"
 
+# asoundrc
+# NB. This is here mainly to make bluealsa work
+lncfge :h ".asoundrc"
+
 # gitconfig
 lncfge :h ".gitconfig"
 

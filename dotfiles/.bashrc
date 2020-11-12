@@ -15,11 +15,16 @@ stty -ixon
 # Path #
 ########
 
-# Local bin folder
-PATH="~/bin:$PATH"
+# Local bin folders
+#  - bin: shell scripts + compiled haskell scripts
+#  - bin/hs: interpreted haskell scripts
+PATH="~/bin/:~/bin/hs:$PATH"
 
 # Emacs bin folder
 PATH="~/.emacs.d/bin:$PATH"
+
+# `ghup` env
+[[ -f "/home/dincio/.ghcup/env" ]] && source "/home/dincio/.ghcup/env"
 
 ###########
 # Aliases #
@@ -60,16 +65,16 @@ alias cx="chmod +x"
 alias real="zathura ~/books/music/the-real-book.pdf"
 
 # Egocentric git clone
-function glone() {
-    rep=${1:?"Usage: glone REPOSITORY"}
+# function glone() {
+#     rep=${1:?"Usage: glone REPOSITORY"}
 
-    # $2 is destination
-    if [[ -z $2 ]]; then
-        git clone --recurse-submodules "https://www.github.com/Bietola/$rep"
-    else
-        git clone --recurse-submodules "https://www.github.com/Bietola/$rep" $2
-    fi
-}
+#     # $2 is destination
+#     if [[ -z $2 ]]; then
+#         git clone --recurse-submodules "https://www.github.com/Bietola/$rep"
+#     else
+#         git clone --recurse-submodules "https://www.github.com/Bietola/$rep" $2
+#     fi
+# }
 
 # Show public ip address
 alias show-ip4="wget http://checkip.dyndns.org/ -O - -o /dev/null | cut -d: -f 2 | cut -d\< -f 1"
