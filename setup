@@ -169,6 +169,10 @@ function lncfge() {
 # Symlink configuration directories/files to their proper locations #
 #####################################################################
 
+######################################################
+# Setup through hard-link is not implemented for now #
+######################################################
+
 # wpa_supplicant
 # NB. contains info (pw and ssid) for connecting to wifi network
 # lncfge -h :e wpa_supplicant
@@ -183,6 +187,10 @@ function lncfge() {
 # Essential edits from original:
 #   - MODULES array changed to enable early KMS start for Intel Grpahics GPU (https://wiki.archlinux.org/index.php/Kernel_mode_setting#Early_KMS_start)
 # lncfge -h :e mkinitcpio.conf
+#
+# boxes (the ones used for block comments)
+# lncfge -h :e "boxes-config"
+
 
 # Modified to make realtime audio support possible
 # lncfge -h /etc/security limits.conf
