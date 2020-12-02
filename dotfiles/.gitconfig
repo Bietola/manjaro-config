@@ -10,6 +10,11 @@
 	spush = push --recurse-submodules=on-demand
 	supdate = submodule update --remote --merge
 	su = stash --include-untracked
+	adog = log --all --decorate --oneline --graph
+	cano = commit --amend --no-edit
+	r3 = rebase --interactive HEAD~3
+	r2 = rebase --interactive HEAD~2
+	r1 = rebase --interactive HEAD~1
 [user]
 	email = dincio.montesi@gmail.com
 	name = Bietola
@@ -17,3 +22,7 @@
 	helper = store
 [submodule]
 	recurse = true
+[pull]
+	rebase = false
+[alis]
+	cano = commit --amend --no-edit
