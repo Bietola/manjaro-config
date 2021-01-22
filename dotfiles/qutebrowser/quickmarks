@@ -11,7 +11,7 @@ script-manager https://github.com/pier-cli/pier
 github-reps https://github.com/Bietola?tab=repositories
 ripgrep-cs https://www.philipdaniels.com/blog/2019/ripgrep-cheatsheet/
 gmail https://mail.google.com/mail/u/0/#inbox
-pirate-ita-2 https://ilcorsaronero-italiano.it/
+pirate-ita-2 https://www.ilcorsaroneros.me/browse/3
 pirate-ita-4 https://www.arciesperanto.it/index.php?do=search&subaction=search
 crates https://crates.io/
 archwiki-computer-info https://wiki.archlinux.org/index.php/HP_Spectre_x360_-_13-ap0xxxx
@@ -142,3 +142,5 @@ yes-doctor-it https://yesdoctor.it/
 doctor-search-it https://yesdoctor.it/
 git-book https://git-scm.com/book/en/v2
 progit https://git-scm.com/book/en/v2
+ffmpeg-cs https://medium.com/@prafullkumar77/ffmpeg-cheat-sheet-a1c6d503e9c3
+pirate-ita https://ilcorsaronero-it.cz/
