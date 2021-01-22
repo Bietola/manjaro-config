@@ -210,7 +210,8 @@ function lncfge() {
 # talon
 #
 # NB. This needs to be hard for scripts hot realoading to work
-lncfge -h :h ".talon"
+lncfge -h :h ".talon/user"
+echo "NB. Only .talon/user is put into place by \`setup\`. For full talon setup instructions, go to the Talon Voice website."
 
 # bashrc
 lncfge :h ".bashrc"
