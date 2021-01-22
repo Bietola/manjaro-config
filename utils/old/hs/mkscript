@@ -1,0 +1,52 @@
+#!/bin/sh
+
+# Parse args
+
+usage() {
+    echo "Usage: mkscript NEW_SCRIPT_FOLDER"
+
+    exit 1
+}
+
+[[ $# -ne 1 ]] && usage
+
+SCRIPT_FOLDER="$1"
+SCRIPT_NAME="$SCRIPT_FOLDER"
+SCRIPT_FILE="$SCRIPT_FOLDER/$SCRIPT_NAME.hs"
+
+if [[ -e "$SCRIPT_FOLDER" ]]; then
+    echo "File/folder/thingy already present at $SCRIPT_FOLDER."
+    echo "Please remove it."
+    exit 1
+fi
+
+# Make folder that contains script environment
+
+mkdir "$SCRIPT_FOLDER"
+cd "$SCRIPT_FOLDER"
+
+# main script file with `stack script` banner (which makes the script executable)
+
+HS_BANNER="$(cat <<EOF
+#!/usr/bin/env stack
+{- stack script
+ --optimize
+ --resolver lts-14.2
+ --package turtle
+-}
+EOF
+)"
+
+cat <<EOF >"$SCRIPT_NAME.hs"
+$HS_BANNER
+EOF
+
+# Setup hie-bios configuration file
+
+cat <<EOF >hie.yaml
+# What is below used to work, but doesn't anymore...
+# Here is the relevant issue: https://github.com/mpickering/hie-bios/issues/217
+cradle:
+    stack:
+        path: $SCRIPT_NAME.hs
+EOF

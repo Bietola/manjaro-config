@@ -1,0 +1,39 @@
+#!/bin/sh
+
+usage() {
+    echo "Usage: mkscript SCRIPT_NAME"
+
+    exit 1
+}
+
+[[ $# -ne 1 ]] && usage
+SCRIPT_NAME="$1"
+
+STACK_PROJ_SRC="./stack-proj/src"
+SCRIPT_DIR="$STACK_PROJ_SRC/$SCRIPT_NAME"
+
+if [[ -e "$SCRIPT_DIR" ]]; then
+    echo "$SCRIPT_NAME already exists in $SCRIPT_DIR"
+
+    exit 1
+fi
+
+mkdir -p "$SCRIPT_DIR"
+cd "$SCRIPT_DIR"
+
+# main script file with `stack script` banner (which makes the script executable)
+
+HS_BANNER="$(cat <<EOF
+#!/usr/bin/env stack
+{- stack script
+ --optimize
+ --package turtle
+-}
+EOF
+)"
+
+cat <<EOF >"$SCRIPT_NAME.hs"
+$HS_BANNER
+EOF
+
+chmod +x "$SCRIPT_NAME.hs"

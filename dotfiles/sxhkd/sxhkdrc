@@ -1,13 +1,22 @@
+########################
+# show useful tooltips #
+########################
+
+super + g ; f
+    notify-send "$(cat ~/config/dotfiles/sxhkd/tooltips/talon-formatters)"
+
 ######################
 # Quickly open files #
 ######################
 
 # TODO: Fix systemctl and use it instead of calling sxhkd directly
-super + x
+super + c ; x
     ~/bin/spawn-term nvim ~/.config/sxhkd/sxhkdrc ;\
     pkill sxhkd ;\
-    sxhkd &\
-    notify-send "sxhkd restarted"
+    notify-send "sxhkd restarted" ;\
+    sxhkd &
+    # TODO: Finish implementation fo below script
+    # ~/bin/sxhkd-w-notify
 
 super + o
     emacs ~/sync/org/1.todo.org
@@ -15,6 +24,9 @@ super + o
 ###########################
 # Quickly launch programs #
 ###########################
+
+super + c ; t 
+    ~/bin/spawn-term ranger ~/.talon/user
 
 super + n
     nautilus ~

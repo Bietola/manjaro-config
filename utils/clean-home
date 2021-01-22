@@ -1,0 +1,4 @@
+#!/bin/sh
+
+mkdir -p ~/tmp/trash
+mv -t ~/tmp/trash Downloads/ Pictures/ Videos/ Templates/ Public/ Music/ Documents/ Sync/ Desktop/

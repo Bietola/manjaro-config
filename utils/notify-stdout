@@ -1,0 +1,9 @@
+#!/bin/sh
+
+usage() {
+    echo "Usage: notify-stdout PROGRAM"
+}
+
+[[ $# -ne 1 ]] && usage
+
+unbuffer $1 | xargs -d\\n -I{} notify-send "{}"

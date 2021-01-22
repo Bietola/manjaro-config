@@ -1,3 +1,31 @@
+#########################
+# Manjaro default stuff #
+#########################
+#
+# TODO: Put this in seperate file
+
+# No idea what these do...
+[[ $- != *i* ]] && return
+[ -r /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
+xhost +local:root > /dev/null 2>&1
+complete -cf sudo
+
+# Bash won't get SIGWINCH if another process is in the foreground.
+# Enable checkwinsize so that bash will check the terminal size when
+# it regains control.  #65623
+# http://cnswww.cns.cwru.edu/~chet/bash/FAQ (E11)
+shopt -s checkwinsize
+shopt -s expand_aliases
+
+# Enable history appending instead of overwriting.  #139609
+shopt -s histappend
+
+########################
+# Start of custom part #
+########################
+#
+# TODO: Load from external file
+
 #################
 # Basic options #
 #################
@@ -11,17 +39,26 @@ set -o vi
 # Use <c-s> to go forward in reverse-i-search(es)
 stty -ixon
 
+###############
+# Environment #
+###############
+
+export TERMINAL="alacritty"
+export BROWSER="qutebrowser"
+export EDITOR="nvim"
+
 ########
 # Path #
 ########
 
-# Local bin folders
-#  - bin: shell scripts + compiled haskell scripts
-#  - bin/hs: interpreted haskell scripts
-PATH="~/bin/:~/bin/hs:$PATH"
+# Local scipts folders
+PATH="~/config/utils/:$PATH"
 
 # Emacs bin folder
 PATH="~/.emacs.d/bin:$PATH"
+
+# Programs not managed by the package manager
+PATH="~/programs/bin:$PATH"
 
 # `ghup` env
 [[ -f "/home/dincio/.ghcup/env" ]] && source "/home/dincio/.ghcup/env"

@@ -22,15 +22,6 @@ if [[ "$1" == "help" ]]; then
     exit 0
 fi
 
-# Parse the `-f` option
-if [[ "$1" == "-f" ]]; then
-    FORCE=$TRUE
-    echo "Warning: Using the Force."
-    shift
-else
-    FORCE=$FALSE
-fi
-
 # Simplified "user" mode.
 # All information are deducted a given user name, assuming a normal linux config layout.
 if [[ "$1" == "user" ]]; then
@@ -62,7 +53,10 @@ fi
 BU_DIR="$CONF_REP/bu"
 
 # Where all the dotfiles are.
-CONF_REP="$CONF_REP/dotfiles"
+DOTS_DIR="$CONF_REP/dotfiles"
+
+# Backup folder
+
 
 ####################
 # Helper functions #
@@ -74,7 +68,7 @@ function error() {
 }
 
 function backup() {
-    echo "Warning: BU not implemented yet"
+    echo "BU not implemented yet"
 }
 
 # Buffed symlink function
@@ -83,19 +77,36 @@ function dolink() {
     dest=${2:?"Link destination requied"}
 
     echo "Setting up $unit_name at $dest"
-    ln -s "$orig" "$dest"
+    # TODO: Make calling haskell scripts easier
+    $CONF_REP/utils/hs/stack-proj/src/symlink-w-tree/symlink-w-tree.hs "$orig" "$dest"
 }
 
 # Even more buffed symlink function (does heavylifting)
 function lncfg() {
+    local do_hardcopy=$FALSE
+
+    function dosync() {
+        if [[ $do_hardcopy -eq $FALSE ]]; then
+            dolink $@
+        else
+            local unit="$(basename $orig)"
+            echo "Setting up $unit to $dest..."
+
+            local orig="$1"
+            local dest="$2"
+            if [[ -d "$orig" ]]; then
+                cp -r "$orig" "$dest"
+            else
+                cp "$orig" "$dest"
+            fi
+
+        fi
+    }
+
     # Parse options
     while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
         -h | --hardcopy )
-            # TODO Implement this
-            # TODO do_hardcopy=$TRUE
-
-            echo "Hardcopy not yet implemented; skipping \"lncfg $@\""
-            return 0
+            do_hardcopy=$TRUE
             ;;
         *)
             err="Unspecified flag to function *lncfg*: $1"
@@ -109,11 +120,16 @@ function lncfg() {
     unit_name="$2"
 
     # Determine origin of config unit (unit is shorthand for file/directory)
-    orig="$CONF_REP/$unit_name"
+    orig="$DOTS_DIR/$unit_name"
+    orig=$(readlink -f "$orig") # TODO: Danger: $() call should probably be wrapped in quotes
 
     # Determine destination of config unit
     case "$dest_specifier" in
         # Parse shorthands
+        ":fp")
+            FLATPAK_CONFIG_LOCATION="$3"
+            dest="$USR_HOME/$FLATPAK_CONFIG_LOCATION/$unit_name"
+            ;;
         ":h")
             dest="$USR_HOME/$unit_name"
             ;;
@@ -135,29 +151,25 @@ function lncfg() {
         return 1
     fi
 
-    # Don't do anything if a config unit is already present at destination
-    if [[ -e "$dest" ]]; then
-        if [[ $FORCE -eq $TRUE ]]; then
-            echo "Warning: overriding old $unit_name conf at $dest"
-            # Save backup and do it
-            backup "$dest"; rm -r "$dest"
-            dolink "$orig" "$dest"
-        else
-            echo "Warning: $unit_name conf directory already exists at $dest (use -f flag to override)."
-        fi
-    # Check for broken symlinks.
-    elif [[ -h "$dest" ]]; then
-        old_dest=$(readlink -f "$dest")
-        echo "Warning: $unit_name already exists as a broken symlink: ($dest->$old_dest) (use -f flag to override)"
+    # Symlink is already present
+    if [[ -h "$dest" ]]; then
+        # Symlink is already there and points to the correct destination
+        old_orig=$(readlink -f "$dest")
+        [[ -z "$old_orig" ]] && old_orig="<INVALID_SYMLINK>"
 
-        if [[ $FORCE ]]; then
-            echo "Warning: overrideing broken symlink with new one from this config repository."
-            rm "$dest"
-            dolink "$orig" "$dest"
+        if [[ "$old_orig" == "$orig" ]]; then
+            echo "Nothing to be done for $unit_name"
+        # Destination is wrong...
+        else
+            echo "Skipping $unit_name: destination config at $dest already contains symlink to other file: $old_orig. Please remove it and rerun the command."
         fi
+    # Don't do anything if a config unit is already present at destination
+    elif [[ -e "$dest" ]]; then
+        echo "Warning: $unit_name real conf directory already exists at $dest. Please remove it and rerun setup."
+    # All is fine
     else
         # Do it
-        dolink "$orig" "$dest"
+        dosync "$orig" "$dest"
     fi
 }
 
@@ -178,6 +190,7 @@ function lncfge() {
 # lncfge -h :e wpa_supplicant
 
 # blacklisted modules
+# TODO: Add this when Haskell implementation is over
 # NB. this is for making sound work, for **linux-sof** modules to make the mic work, older sound modules
 #     need to be blacklisted.
 # lncfge -h :e modprobe.d
@@ -191,9 +204,13 @@ function lncfge() {
 # boxes (the ones used for block comments)
 # lncfge -h :e "boxes-config"
 
-
 # Modified to make realtime audio support possible
 # lncfge -h /etc/security limits.conf
+
+# talon
+#
+# NB. This needs to be hard for scripts hot realoading to work
+lncfge -h :h ".talon"
 
 # bashrc
 lncfge :h ".bashrc"
@@ -225,3 +242,17 @@ lncfge :c qutebrowser
 
 # haskeline
 lncfge :h ".haskeline"
+
+# dunst
+lncfge :c dunst
+
+# rclone
+lncfge :c rclone
+
+# alacritty
+lncfge :c alacritty
+
+# vim plugin configs
+# LEGACY: Used to be needed by nixos
+# lncfge :c nvim/coc-settings.json
+# lncfge :c nvim/UltiSnips

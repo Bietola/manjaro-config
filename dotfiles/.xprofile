@@ -1,6 +1,10 @@
 # Vim is the wea
 setxkbmap -option caps:escape
 
+# Desktop notifications
+# TODO: avoid having to kill `notify-osd` at every startup
+dunst &
+
 # Anything at the press of a key
 # TODO: find a way of using a systemd service
 sxhkd &

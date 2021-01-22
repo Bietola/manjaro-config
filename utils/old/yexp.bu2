@@ -1,0 +1,208 @@
+#! /usr/bin/env nix-shell
+#! nix-shell -i python -p python39 python39Packages.pyyaml
+
+import re
+import sys
+import yaml
+
+###########
+# Globals #
+###########
+
+env = {}
+cached_exps = {}
+lines = []
+
+####################
+# Helper functions #
+####################
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
+def dict_add_dotted_str(d, s, val, err_on_present = False):
+    splt_s = s.split('.', 1)
+    topkey = splt_s[0]
+    rest = splt_s[1] if len(splt_s) == 2 else None
+
+    if rest:
+        if not d.get(topkey, None):
+            d[topkey] = {}
+        dict_add_dotted_str(d[topkey], rest, val, err_on_present)
+    else:
+        # TODO: Check for duplicates
+        d[topkey] = val
+
+def dict_get_w_dotted_key(d, s):
+    splt_s = s.split('.', 1)
+    topkey = splt_s[0]
+    rest = splt_s[1] if len(splt_s) == 2 else None
+
+    if rest == None:
+        return d.get(topkey, None)
+    elif not d.get(topkey, None):
+        return None
+    else:
+        return dict_get_w_dotted_key(d[topkey], rest)
+
+def do_eval_in_sub(m):
+    indent = m.group(1)
+    name = m.group(2)
+    control_char = m.group(3)
+    exp = m.group(4)
+
+    str_key = indent + name
+
+    if control_char == "$":
+        cached_exps[name] = exp
+        val = do_eval_interpolation(exp)
+        return str_key + ":#> " + str(val)
+
+    elif control_char == "#" or control_char == "S" or control_char == "E":
+        if cached_exp := cached_exps.get(name, None):
+            if control_char == "#":
+                val = do_eval_interpolation(exp)
+            elif control_char == "S":
+                val = cached_exp
+            elif control_char == "E":
+                val = cached_exp
+                control_char = "$"
+
+            return str_key + ":" + control_char + "> " + str(val)
+
+    else:
+        return str_key + ":" + control_char + "> " + "Error: Unknown control character: " + control_char
+
+def is_op(s):
+    return (s == "+" or s == "-" or s == "/" or s == "*")
+
+def is_float(value):
+  try:
+    float(value)
+    return True
+  except:
+    return False
+
+def do_eval_interpolation(interpolated_str):
+    return re.sub(
+        r'\$\{(.*?)\}',
+        lambda m: str(do_eval_w_err(m.group(1))),
+        interpolated_str
+    )
+
+def do_eval_w_err(exp):
+    val = do_eval(exp)
+    if not val:
+        return "Error: No expression cached for " + name
+    else:
+        return val
+
+def do_eval(exp):
+    exp_w_subs = []
+    for word in exp.split():
+        if is_op(word) or is_float(word):
+            exp_w_subs.append(word)
+        else:
+            val = dict_get_w_dotted_key(env, word)
+            if val == None:
+                return "Error: No variable named \"" + word + "\""
+            if type(val) is dict:
+                return "Error: " + word + " is a dictionary"
+            else:
+                while not is_float(val):
+                    val = str(do_eval(val))
+                exp_w_subs.append(val)
+
+    # eprint(exp_w_subs)
+
+    return eval(' '.join(exp_w_subs))
+
+########
+# Main #
+########
+
+# Get contents of file
+lines = sys.stdin.read().split('\n')
+
+# First pass: get variables
+keyval_pair_re = re.compile('^(\s*)(.*)\s*:(.*>)?\s*(.*)$')
+new_subscope_re = re.compile('^\s*(.*):\s*$')
+whitespace_re = re.compile('^\s*$')
+list_ele_re = re.compile('^\s*-.*$')
+cur_scope_lv = 0
+scope = []
+IDENT_UNIT = 4
+def ident_err(linenum): return "Error: indentation off at line " + str(linenum)
+for [linenum, line] in enumerate(lines):
+    if whitespace_re.match(line):
+        continue
+
+    if list_ele_re.match(line):
+        continue
+
+    if m := new_subscope_re.match(line):
+        scope.append(m.group(1))
+        cur_scope_lv += 1
+        continue
+
+    if m := keyval_pair_re.match(line):
+        ident_lv = m.group(1)
+        name = m.group(2)
+        val = m.group(4)
+
+        line_scope_lv = int(len(ident_lv) / IDENT_UNIT)
+        if line_scope_lv > cur_scope_lv:
+            pass
+        elif line_scope_lv < cur_scope_lv:
+            scope = scope[:line_scope_lv]
+        else:
+            pass
+        cur_scope_lv = line_scope_lv
+
+        if cur_scope_lv > 0:
+            name = '.'.join(scope) + '.' + name
+        dict_add_dotted_str(env, name, val, True)
+
+eprint(env, end = '')
+
+try:
+    splitPoint = next(filter(lambda e: e[1].strip() == "# STORAGE", enumerate(lines)))[0]
+except:
+    splitPoint = -1
+
+if splitPoint == -1:
+    body = lines
+    storage = []
+else:
+    body = lines[0:splitPoint]
+    storage = lines[splitPoint+1:]
+
+# eprint(body)
+# eprint(storage)
+
+malformed_storage = False
+try:
+    cached_exps = yaml.safe_load('\n'.join(storage)) or {}
+except:
+    eprint("Error: Malformed STORAGE section")
+    malformed_storage = True
+    cached_exps = {}
+
+for line in body:
+    print(
+        re.sub(
+            r'^(\s*)(.*)\s*:(.)>\s*(.*)$',
+            do_eval_in_sub,
+            line
+        )
+    )
+
+if malformed_storage:
+    print()
+    print("# MALFORMED STORAGE BU")
+    print(''.join(storage))
+
+# WARNING: STORAGE must be the last section of the doc!!
+if len(cached_exps) > 0:
+    print("# STORAGE", end = '\n\n')
+    print(yaml.dump(cached_exps))
