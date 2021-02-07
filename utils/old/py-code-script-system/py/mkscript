@@ -1,0 +1,37 @@
+#!/bin/sh
+
+UTILS_DIR=~/config/utils
+PY_SCRIPTS_DIR="$UTILS_DIR/code/py"
+
+usage() {
+    echo "Usage: mkscript SCRIPT_NAME"
+
+    exit 1
+}
+
+[[ $# -ne 1 ]] && usage
+
+SCRIPT_NAME="$1"
+SCRIPT_DIR="$PY_SCRIPTS_DIR/$SCRIPT_NAME"
+EXE_PATH="$UTILS_DIR/bin/$SCRIPT_NAME"
+
+# Clear needed directories
+[[ -e "$SCRIPT_DIR" ]] && { echo "Please remove $SCRIPT_DIR to continue"; exit 1; }
+[[ -e "$EXE_PATH" ]] && { echo "Please remove $EXE_PATH to continue"; exit 1; }
+
+# Request needed programs
+command -v poetry &>/dev/null || { echo "Please install python-poetry to continue"; exit 1; }
+
+# poetry requires us to change to the project directory
+cd "$PY_SCRIPTS_DIR"
+
+# Create project structure with poetry
+poetry new "$SCRIPT_NAME"
+
+# Link executable
+cat <<EOF >"$EXE_PATH"
+#!/bin/sh
+
+python "$SCRIPT_DIR/main.py" "\$@"
+EOF
+chmod +x "$EXE_PATH"

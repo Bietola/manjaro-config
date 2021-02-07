@@ -1,0 +1,18 @@
+#!/bin/sh
+
+UTILS_DIR=~/config/utils
+
+usage() {
+    echo "Usage: rmscript SCRIPT_NAME"
+
+    exit 1
+}
+
+[[ $# -ne 1 ]] && usage
+
+SCRIPT_NAME="$1"
+SCRIPT_DIR="$UTILS_DIR/code/py/$SCRIPT_NAME"
+EXE_LINK="$UTILS_DIR/bin/$SCRIPT_NAME"
+
+rm -r "$SCRIPT_DIR"
+rm "$EXE_LINK"

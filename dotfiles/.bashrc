@@ -52,7 +52,7 @@ export EDITOR="nvim"
 ########
 
 # Local scipts folders
-PATH="~/config/utils/:$PATH"
+PATH="~/bin:$PATH"
 
 # Emacs bin folder
 PATH="~/.emacs.d/bin:$PATH"
@@ -76,18 +76,18 @@ alias vim='nvim'
 # cp, but with progress
 alias cpp='rsync -ah --progress'
 
-# pfetch is hard to remember...
+# pfetch is hard to remember
 alias computer-info='neofetch'
 
 # For when everything is dieing
 alias power='acpi'
 
-# Installing things is a recurrent endeavour...
-alias fi='yay -S'
-alias si='yay -Syu'
-alias r='yay -Rsn'
-alias s='yay -Ss'
-alias q='yay -Q'
+# Installing things is a recurrent endeavour
+alias yfi='yay -S'
+alias ysi='yay -Syu'
+alias yr='yay -Rsn'
+alias ys='yay -Ss'
+alias yq='yay -Q'
 
 # Color is good
 alias ls='ls --color=auto'

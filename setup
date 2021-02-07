@@ -74,39 +74,67 @@ function backup() {
 # Buffed symlink function
 function dolink() {
     orig=${1:?"Link origin required"}
-    dest=${2:?"Link destination requied"}
+    dest=${2:-"Link destination required"}
 
     echo "Setting up $unit_name at $dest"
     # TODO: Make calling haskell scripts easier
-    $CONF_REP/utils/hs/stack-proj/src/symlink-w-tree/symlink-w-tree.hs "$orig" "$dest"
+    $CONF_REP/utils/code/hs/stack-proj/src/symlink-w-tree/symlink-w-tree.hs "$orig" "$dest"
 }
 
 # Even more buffed symlink function (does heavylifting)
 function lncfg() {
-    local do_hardcopy=$FALSE
+    local do_oneway_sync=$FALSE
+    local do_twoway_sync=$FALSE
 
     function dosync() {
-        if [[ $do_hardcopy -eq $FALSE ]]; then
-            dolink $@
+        if [[ $do_twoway_sync -eq $TRUE && $do_oneway_sync -eq $TRUE ]]; then
+            echo "Both -s && -ss flags can't be active at once"
+            exit 1
+
+        elif [[ $do_oneway_sync -eq $TRUE ]]; then
+            local orig=${1:?"Origin required"}
+            local dest=${2:?"Destination required"}
+
+            echo "R-Syncing $orig with $dest..."
+
+            rsync -aP --backup --backup-dir=/config/bu "$orig"/ "$dest" >>/config/logs/rsync.log
+
+        elif [[ $do_twoway_sync -eq $TRUE ]]; then
+            # TODO: Implement this when needed
+            echo "Error: two-way sync not supported yet"
+            exit 1
+
         else
-            local unit="$(basename $orig)"
-            echo "Setting up $unit to $dest..."
+            # Attempt a soft symlink
+            # Symlink is already present
+            if [[ -h "$dest" ]]; then
+                # Symlink is already there and points to the correct destination
+                old_orig=$(readlink -f "$dest")
+                [[ -z "$old_orig" ]] && old_orig="<INVALID_SYMLINK>"
 
-            local orig="$1"
-            local dest="$2"
-            if [[ -d "$orig" ]]; then
-                cp -r "$orig" "$dest"
+                if [[ "$old_orig" == "$orig" ]]; then
+                    echo "Nothing to be done for $unit_name"
+                # Destination is wrong...
+                else
+                    echo "Skipping $unit_name: destination config at $dest already contains symlink to other file: $old_orig. Please remove it and rerun the command."
+                fi
+            # Don't do anything if a config unit is already present at destination
+            elif [[ -e "$dest" ]]; then
+                echo "Warning: $unit_name real conf directory already exists at $dest. Please remove it and rerun setup."
+            # All is fine
             else
-                cp "$orig" "$dest"
+                dolink $@
             fi
-
         fi
     }
 
     # Parse options
     while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
-        -h | --hardcopy )
-            do_hardcopy=$TRUE
+        -ss | --two-way-sync )
+            do_twoway_sync=$TRUE
+            ;;
+        -s | --one-way-sync )
+            do_oneway_sync=$TRUE
             ;;
         *)
             err="Unspecified flag to function *lncfg*: $1"
@@ -115,13 +143,13 @@ function lncfg() {
     esac; shift; done
     [[ "$1" == '--' ]] && shift
 
-    # Collect args
-    dest_specifier="$1"
-    unit_name="$2"
+    # Collect first args
+    local dest_specifier="$1"
+    local unit_name="$2"
 
     # Determine origin of config unit (unit is shorthand for file/directory)
-    orig="$DOTS_DIR/$unit_name"
-    orig=$(readlink -f "$orig") # TODO: Danger: $() call should probably be wrapped in quotes
+    local orig="$DOTS_DIR/$unit_name"
+    local orig=$(readlink -f "$orig") # TODO: Danger: $() call should probably be wrapped in quotes
 
     # Determine destination of config unit
     case "$dest_specifier" in
@@ -136,8 +164,9 @@ function lncfg() {
         ":c")
             dest="$CONF_HOME/$unit_name"
             ;;
-        ":e")
-            dest="/etc/$unit_name"
+        # Mirror: dotfile conf path reflects real-life system path
+        ":m")
+            dest="/$unit_name"
             ;;
         # Parse as full path
         *)
@@ -151,26 +180,8 @@ function lncfg() {
         return 1
     fi
 
-    # Symlink is already present
-    if [[ -h "$dest" ]]; then
-        # Symlink is already there and points to the correct destination
-        old_orig=$(readlink -f "$dest")
-        [[ -z "$old_orig" ]] && old_orig="<INVALID_SYMLINK>"
-
-        if [[ "$old_orig" == "$orig" ]]; then
-            echo "Nothing to be done for $unit_name"
-        # Destination is wrong...
-        else
-            echo "Skipping $unit_name: destination config at $dest already contains symlink to other file: $old_orig. Please remove it and rerun the command."
-        fi
-    # Don't do anything if a config unit is already present at destination
-    elif [[ -e "$dest" ]]; then
-        echo "Warning: $unit_name real conf directory already exists at $dest. Please remove it and rerun setup."
-    # All is fine
-    else
-        # Do it
-        dosync "$orig" "$dest"
-    fi
+    # Do it
+    dosync "$orig" "$dest"
 }
 
 function lncfge() {
@@ -207,11 +218,17 @@ function lncfge() {
 # Modified to make realtime audio support possible
 # lncfge -h /etc/security limits.conf
 
+# Custom systemd system services
+lncfge -s :m etc/systemd/system
+
 # talon
 #
-# NB. This needs to be hard for scripts hot realoading to work
-lncfge -h :h ".talon/user"
-echo "NB. Only .talon/user is put into place by \`setup\`. For full talon setup instructions, go to the Talon Voice website."
+# NB. This needs to be a hard link for scripts hot realoading to work
+lncfge -s :h ".talon/user"
+echo -e "\tNB. Only .talon/user is put into place by \`setup\`. For full talon setup instructions, go to the Talon Voice website."
+
+# timidity
+lncfge -s :m etc/timidity
 
 # bashrc
 lncfge :h ".bashrc"
@@ -257,3 +274,7 @@ lncfge :c alacritty
 # LEGACY: Used to be needed by nixos
 # lncfge :c nvim/coc-settings.json
 # lncfge :c nvim/UltiSnips
+
+for logfile in logs/*.log; do
+    echo "--------------DONE----------------" >>"$logfile"
+done

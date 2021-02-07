@@ -28,9 +28,6 @@ super + o
 super + c ; t 
     ~/bin/spawn-term ranger ~/.talon/user
 
-super + n
-    nautilus ~
-
 super + e
     emacs
 

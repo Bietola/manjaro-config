@@ -1,0 +1,11 @@
+[Unit]
+Description=Telegram bot for chug related things
+
+[Service]
+Type=forking
+Restart=always
+ExecStart=/usr/bin/python3 /config/services/first-boy/main.py
+# ExecStop=/usr/bin/python3 /config/services/first-boy/send-cmd.py stop
+
+[Install]
+WantedBy=multi-user.target

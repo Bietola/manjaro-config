@@ -1,0 +1,12 @@
+#!/bin/sh
+
+usage() {
+    echo "Usage: pomo [TIME_TO_WAIT] [MESSAGE_TO_DISPLAY]"
+
+    exit 1
+}
+
+TIME_INTERVAL="${1:-25}"
+MESSAGE="${2:-$TIME_INTERVAL minutes have passed}"
+
+sleep $(echo "$TIME_INTERVAL * 60" | bc); notify-send -t 3600000 "$MESSAGE"

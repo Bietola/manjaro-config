@@ -1,0 +1,3 @@
+#!/bin/sh
+
+xmodmap -pk | awk '/^\s*28/ { print $3 }'

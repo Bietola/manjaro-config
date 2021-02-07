@@ -26,3 +26,5 @@
 	rebase = false
 [alis]
 	cano = commit --amend --no-edit
+[init]
+	defaultBranch = main

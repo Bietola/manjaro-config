@@ -2,12 +2,7 @@
 setxkbmap -option caps:escape
 
 # Desktop notifications
-# TODO: avoid having to kill `notify-osd` at every startup
 dunst &
-
-# Anything at the press of a key
-# TODO: find a way of using a systemd service
-sxhkd &
 
 # Blue light is evil
 redshift -O 3000
@@ -17,3 +12,15 @@ anamnesis --start
 
 # Evergreen trees are a staple at this point
 feh --bg-fill ~/sync/img/desktops/evergreen-tre.jpg
+
+##################################################
+# Things That Could Probably Be Systemd Services #
+##################################################
+#
+# TODO: Make them systemd services...
+
+# Anything at the press of a key
+sxhkd &
+
+# Needed to make timidity play nicely with pulseaudio
+timidity -iA &

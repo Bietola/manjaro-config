@@ -1,0 +1,13 @@
+[Unit]
+Description=A telegram bot for all chug related things
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/usr/bin/python3 /config/services/first-boy/src/main.py
+ExecStop=/usr/bin/python3 /config/services/first-boy/src/send-cmd.py stop
+
+[Install]
+WantedBy=multi-user.target
