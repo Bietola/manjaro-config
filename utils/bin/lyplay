@@ -1,0 +1,45 @@
+#!/bin/env python3
+
+import os
+import mido
+from mido import MidiFile
+import fire
+
+def lyplay(
+        midi_file_path,
+        start_measure = 0,
+        end_measure = None
+    ):
+
+    midi = MidiFile(midi_file_path)
+
+    tempo = next(filter(
+        lambda msg: msg.type == 'set_tempo',
+        midi
+    ))
+    tempo = int(mido.tempo2bpm(tempo.tempo))
+
+    time_sig = next(filter(
+        lambda msg: msg.type == 'time_signature',
+        midi
+    ))
+
+    quarter_time = tempo * 4 / time_sig.denominator
+    bar_time_bpms = quarter_time * time_sig.numerator
+    exact_bar_time = bar_time_bpms * (1/60)
+    # Go one note before to compensate for unkown delay effect
+    quarter_time_secs = quarter_time * (1/60)
+    bar_time = exact_bar_time - quarter_time_secs
+
+    print(f'bar time: {bar_time}')
+
+    start_t = int(bar_time * start_measure)
+    end_t = int(bar_time * end_measure) if end_measure \
+        else ''
+
+    print(f'start time: {start_t}')
+
+    os.system(f'timidity -G{start_t}-{end_t} {midi_file_path}')
+
+if __name__ == '__main__':
+    fire.Fire(lyplay)

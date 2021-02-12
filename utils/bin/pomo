@@ -1,0 +1,17 @@
+#!/bin/env python3
+
+import time
+import os
+import sys
+import fire
+
+def pomo(minutes=25):
+    print(f'Message in {minutes}min')
+    time.sleep(minutes * 60)
+    os.system(f'notify-send -t {60 * 60 * 60 * 1000} "{minutes}min have passed"')
+
+def main():
+    fire.Fire(pomo)
+
+if __name__ == '__main__':
+    main()

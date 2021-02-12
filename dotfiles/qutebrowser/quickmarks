@@ -158,3 +158,6 @@ archwiki-timidity https://wiki.archlinux.org/index.php/Timidity%2B%2B
 dasher-training-texts http://www.inference.org.uk/dasher/Download.html
 mutopia https://www.mutopiaproject.org/
 py-beautiful-soup-docs https://beautiful-soup-4.readthedocs.io/en/latest/
+abc-tune-search http://abcnotation.com/search
+abc-tut http://trillian.mit.edu/~jc/music/abc/doc/ABCtutorial.html
+mido-docs https://mido.readthedocs.io/en/latest/meta_message_types.html
