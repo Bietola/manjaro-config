@@ -1,0 +1,8 @@
+#!/bin/env python3
+
+for i in range(2340, 2377):
+    utf_esc_seq = rf'\u{i}'
+    utf_char = bytes(utf_esc_seq, 'utf-8').decode('unicode-escape')
+
+    print(utf_char, end='\t')
+print()
