@@ -24,3 +24,6 @@ sxhkd &
 
 # Needed to make timidity play nicely with pulseaudio
 timidity -iA &
+
+# The touchpad is dead, long live the mouse
+synclient TouchpadOff=1

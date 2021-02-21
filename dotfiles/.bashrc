@@ -63,6 +63,9 @@ PATH="~/programs/bin:$PATH"
 # `ghup` env
 [[ -f "/home/dincio/.ghcup/env" ]] && source "/home/dincio/.ghcup/env"
 
+# programs installed with **raku**
+PATH="~/.raku/bin:$PATH"
+
 ###########
 # Aliases #
 ###########
@@ -93,7 +96,7 @@ alias yq='yay -Q'
 alias ls='ls --color=auto'
 
 # Always send things to X clipboard
-alias xclip="xclip -selection clipboard"
+alias clip="xclip -selection clipboard"
 
 # Bash is tedious enough on its own
 alias cx="chmod +x"
@@ -115,3 +118,14 @@ alias real="zathura ~/books/music/the-real-book.pdf"
 
 # Show public ip address
 alias show-ip4="wget http://checkip.dyndns.org/ -O - -o /dev/null | cut -d: -f 2 | cut -d\< -f 1"
+
+###############################################
+# Modifications Appended by External Programs #
+###############################################
+
+# Add perl's CPAN to path
+PATH="/home/dincio/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/home/dincio/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/home/dincio/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/home/dincio/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/dincio/perl5"; export PERL_MM_OPT;

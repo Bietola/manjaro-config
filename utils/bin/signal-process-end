@@ -11,6 +11,7 @@ while true; do
 
     # If pgrep call is empty, then the program is no longer running and so is probably finished with its task
     if [[ -z $(pgrep "$1") ]]; then
+        notify-send -t $((3600 * 1000)) "$1 is done"
         if [[ -n "$2" ]]; then
             mplayer -volume "$2" ~/bin/assets/alrm.opus
         else 

@@ -1,4 +1,4 @@
-# Timon Tier List
+Timon Tier List
 
 date: 23/01/21
 
