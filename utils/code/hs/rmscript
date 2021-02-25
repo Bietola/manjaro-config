@@ -1,0 +1,21 @@
+#!/bin/sh
+
+usage() {
+    echo "Usage: rmscript SCRIPT_NAME"
+
+    exit 1
+}
+
+[[ $# -ne 1 ]] && usage
+SCRIPT_NAME="$1"
+
+STACK_PROJ_SRC="./stack-proj/src"
+SCRIPT_DIR="$STACK_PROJ_SRC/$SCRIPT_NAME"
+
+if [[ ! -e "$SCRIPT_DIR" ]]; then
+    echo "$SCRIPT_NAME does not exist in $SCRIPT_DIR"
+
+    exit 1
+fi
+
+rm -r "$SCRIPT_DIR"

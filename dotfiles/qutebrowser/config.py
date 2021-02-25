@@ -10,9 +10,9 @@
 ##   qute://help/configuring.html
 ##   qute://help/settings.html
 
-## This is here so configs done via the GUI are still loaded.
-## Remove it to not load settings done via the GUI.
-# config.load_autoconfig()
+## This is here so configs done via the GUI are not loaded.
+## Use `config.load_autoconfig()` to load them.
+config.load_autoconfig()
 
 ## Aliases for commands. The keys of the given dictionary are the
 ## aliases, while the values are the commands they map to.
@@ -696,7 +696,7 @@ c.aliases = {'w': 'session-save', 'q': 'close', 'qa': 'quit', 'wq': 'quit --save
 ## Limit fullscreen to the browser window (does not expand to fill the
 ## screen).
 ## Type: Bool
-# c.content.fullscreen.window = False
+c.content.fullscreen.window = True
 
 ## Allow websites to request geolocations.
 ## Type: BoolAsk

@@ -3,7 +3,7 @@
 ########
 
 ⍋
-    notify-send "$(forutne)"
+    notify-send "$(fortune)"
 
 ########################
 # show useful tooltips #
@@ -18,22 +18,22 @@ super + g ; f
 
 # TODO: Fix systemctl and use it instead of calling sxhkd directly
 super + c ; x
-    ~/bin/spawn-term nvim ~/.config/sxhkd/sxhkdrc ;\
+    alacritty -e nvim ~/.config/sxhkd/sxhkdrc ;\
     pkill sxhkd ;\
     notify-send "sxhkd restarted" ;\
     sxhkd &
     # TODO: Finish implementation fo below script
     # ~/bin/sxhkd-w-notify
 
-super + o
-    emacs ~/sync/org/1.todo.org
+super + t
+    emacs ~/sync/todo/1.todo.org
 
 ###########################
 # Quickly launch programs #
 ###########################
 
 super + c ; t 
-    ~/bin/spawn-term ranger ~/.talon/user
+    alacritty -e ranger ~/.talon/user
 
 super + e
     emacs
@@ -45,7 +45,7 @@ super + f
     firefox
 
 super + r
-    "$TERMINAL" -e ranger
+    alacritty -e ranger
 
 ##################
 # Power commands #
@@ -56,6 +56,13 @@ alt + shift + s
 
 alt + shift + r
     reboot
+
+##########################
+# Quickly Toggle Options #
+##########################
+
+super + shift + t
+    ~/bin/toggle-touchpad | xargs notify-send
 
 #######################
 # Brightness controls #
@@ -119,17 +126,21 @@ super + ctrl + r
 super + shift + p
     ~/bin/pmenu
 
+############
+# Pomodoro #
+############
+
+super + ctrl + p
+    ~/bin/pomo --intro="Started 25min pomo"
+
+super + shift + ctrl + p
+    notify-send $TERM
+    # ~/bin/spawn-term nvim
+    # ~/bin/pomo --intro="Started ${TIME}min pomo"
+
 ########################
 # Reserved for testing #
 ########################
 
-super + shift + t
-    notify-send "Hello there"
-
-#############
-# Temporary #
-#############
-
-super + shift + d
-    ~/bin/dati ;\
-    notify-send "Data saved"
+super + shift + alt + t
+    notify-send "Testing"

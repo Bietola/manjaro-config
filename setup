@@ -188,6 +188,14 @@ function lncfge() {
     lncfg $@ || error
 }
 
+##########################
+# Environment/Path Setup #
+##########################
+
+# .bashrc
+# TODO/WIP
+
+
 #####################################################################
 # Symlink configuration directories/files to their proper locations #
 #####################################################################
@@ -232,6 +240,11 @@ lncfge -s :m etc/timidity
 
 # bashrc
 lncfge :h ".bashrc"
+
+# environment.d
+# NB. This is only used for the `.conf` file within, containing the environmental variables used
+#     by all user systemd services.
+lncfge :c environment.d
 
 # xprofile
 lncfge :h ".xprofile"

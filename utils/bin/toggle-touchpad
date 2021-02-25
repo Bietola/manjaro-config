@@ -1,0 +1,21 @@
+#!/bin/sh
+
+usage() {
+    echo "Usage: toggle-touchpad"
+
+    exit 1
+}
+
+[[ $# -ne 0 ]] && usage
+
+TP_STATE=$(synclient | awk '/TouchpadOff/ { print $3 }')
+
+if [[ $TP_STATE -eq 1 ]]; then
+    echo "Touchpad on"
+    TP_STATE=0
+elif [[ $TP_STATE -eq 0 ]]; then
+    echo "Touchpad off"
+    TP_STATE=1
+fi
+
+synclient TouchpadOff=$TP_STATE

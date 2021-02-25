@@ -19,7 +19,8 @@ feh --bg-fill ~/sync/img/desktops/evergreen-tre.jpg
 #
 # TODO: Make them systemd services...
 
-# Anything at the press of a key
+# All the shortcuts
+# TODO: Fix env
 sxhkd &
 
 # Needed to make timidity play nicely with pulseaudio

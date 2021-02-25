@@ -5,8 +5,12 @@ import os
 import sys
 import fire
 
-def pomo(minutes=25):
+def pomo(intro=None, minutes=25):
     print(f'Message in {minutes}min')
+
+    if intro:
+        os.system(f'notify-send "{intro}"')
+
     time.sleep(minutes * 60)
     os.system(f'notify-send -t {60 * 60 * 60 * 1000} "{minutes}min have passed"')
 

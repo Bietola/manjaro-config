@@ -43,7 +43,7 @@ stty -ixon
 # Environment #
 ###############
 
-export TERMINAL="alacritty"
+export TERM="alacritty"
 export BROWSER="qutebrowser"
 export EDITOR="nvim"
 
@@ -65,6 +65,21 @@ PATH="~/programs/bin:$PATH"
 
 # programs installed with **raku**
 PATH="~/.raku/bin:$PATH"
+
+#########################
+# Git Utility Functions #
+#########################
+
+git-rename-remote-branch(){
+  if [ $# -ne 3 ]; then
+    echo "Rationale : Rename a branch on the server without checking it out."
+    echo "Usage     : ${FUNCNAME[0]} <remote> <old name> <new name>"
+    echo "Example   : ${FUNCNAME[0]} origin master release"
+    return 1 
+  fi
+
+  git push $1 $1/$2\:refs/heads/$3 :$2
+}
 
 ###########
 # Aliases #
