@@ -1,0 +1,6 @@
+#!/bin/sh
+
+TO_BU=/home/dincio/sync
+RESTIC_BU_REPO="rclone:rem:restic-home-bu"
+
+~/bin/restic-bu "$RESTIC_BU_REPO" "$TO_BU" 

@@ -1,3 +1,5 @@
+# TODO: Substitute every mention to `alacritty` with `$TERM` once environment works
+
 ########
 # Test #
 ########
@@ -25,6 +27,9 @@ super + c ; x
     # TODO: Finish implementation fo below script
     # ~/bin/sxhkd-w-notify
 
+super + c ; t 
+    alacritty -e ranger ~/.talon/user
+
 super + t
     emacs ~/sync/todo/1.todo.org
 
@@ -32,8 +37,8 @@ super + t
 # Quickly launch programs #
 ###########################
 
-super + c ; t 
-    alacritty -e ranger ~/.talon/user
+super + shift + Return
+    alacritty
 
 super + e
     emacs
@@ -134,9 +139,8 @@ super + ctrl + p
     ~/bin/pomo --intro="Started 25min pomo"
 
 super + shift + ctrl + p
-    notify-send $TERM
-    # ~/bin/spawn-term nvim
-    # ~/bin/pomo --intro="Started ${TIME}min pomo"
+    TIME=$(zenity --entry --text="Time in mins") ;\
+    ~/bin/pomo --intro="Started ${TIME}min pomo" $TIME
 
 ########################
 # Reserved for testing #

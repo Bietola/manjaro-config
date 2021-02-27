@@ -236,7 +236,7 @@ lncfge -s :h ".talon/user"
 echo -e "\tNB. Only .talon/user is put into place by \`setup\`. For full talon setup instructions, go to the Talon Voice website."
 
 # timidity
-lncfge -s :m etc/timidity
+lncfge :m etc/timidity
 
 # bashrc
 lncfge :h ".bashrc"

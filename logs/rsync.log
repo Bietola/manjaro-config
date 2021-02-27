@@ -1003,3 +1003,71 @@ sending incremental file list
 sending incremental file list
 sending incremental file list
 --------------DONE----------------
+sending incremental file list
+sending incremental file list
+sending incremental file list
+timidity.cfg
+             47 100%    0.00kB/s    0:00:00               47 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=0/2)
+--------------DONE----------------
+sending incremental file list
+sending incremental file list
+--------------DONE----------------
+sending incremental file list
+sending incremental file list
+sending incremental file list
+sending incremental file list
+./
+knausj_talon/
+knausj_talon/apps/
+knausj_talon/apps/1password/
+knausj_talon/apps/amethyst/
+knausj_talon/apps/chrome/
+knausj_talon/apps/discord/
+knausj_talon/apps/eclipse/
+knausj_talon/apps/edge/
+knausj_talon/apps/firefox/
+knausj_talon/apps/gdb/
+knausj_talon/apps/generic_terminal/
+knausj_talon/apps/i3wm/
+knausj_talon/apps/jetbrains/
+knausj_talon/apps/kubectl/
+knausj_talon/apps/linux/
+knausj_talon/apps/mac/
+knausj_talon/apps/mac/finder/
+knausj_talon/apps/mac/iterm/
+knausj_talon/apps/mac/terminal/
+knausj_talon/apps/slack/
+knausj_talon/apps/teams/
+knausj_talon/apps/visualstudio/
+knausj_talon/apps/vscode/
+knausj_talon/apps/vscode/snippets/
+knausj_talon/apps/web/
+knausj_talon/apps/win/
+knausj_talon/apps/win/command_processor/
+knausj_talon/apps/win/explorer/
+knausj_talon/apps/win/mintty/
+knausj_talon/apps/win/notepad++/
+knausj_talon/apps/win/powershell/
+knausj_talon/apps/win/windows_terminal/
+knausj_talon/apps/win/wsl/
+knausj_talon/apps/windbg/
+knausj_talon/code/
+knausj_talon/code/Resources/
+knausj_talon/code/app_names/
+knausj_talon/lang/
+knausj_talon/lang/c/
+knausj_talon/lang/csharp/
+knausj_talon/lang/javascript/
+knausj_talon/lang/python/
+knausj_talon/lang/r/
+knausj_talon/lang/talon/
+knausj_talon/lang/typescript/
+knausj_talon/lang/vimscript/
+knausj_talon/misc/
+knausj_talon/modes/
+knausj_talon/mouse_grid/
+knausj_talon/text/
+--------------DONE----------------
+sending incremental file list
+sending incremental file list
+--------------DONE----------------
