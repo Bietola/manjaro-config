@@ -5,7 +5,7 @@ import os
 import sys
 import fire
 
-def pomo(intro=None, minutes=25):
+def pomo(minutes=25, intro=None):
     print(f'Message in {minutes}min')
 
     if intro:

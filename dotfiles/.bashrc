@@ -100,6 +100,9 @@ alias computer-info='neofetch'
 # For when everything is dieing
 alias power='acpi'
 
+# The most important unix utility
+alias cow='cowsay'
+
 # Installing things is a recurrent endeavour
 alias yfi='yay -S'
 alias ysi='yay -Syu'

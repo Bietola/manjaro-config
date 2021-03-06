@@ -76,7 +76,6 @@ poli-interex https://www.polimi.it/en/landingpages/exchange-your-mind/
 poli-graph https://lleugen.github.io/PolinetworkGraph/
 poli-residenza https://polimi-sol.dirittoallostudio.it/apps/V3.1/sol/public/index.php
 poli-appelli-esame https://www18.ceda.polimi.it/informativa_appelli/informativa_appelli/controller/ElencoAppelli.do?jaf_currentWFID=main&EVN_DEFAULT=evento&polij_step=0&__pj0=0&__pj1=9db0b04714be90ea30bbf9607d538e5a
-corona-status-ita https://www.sipuousciredicasa.it/
 si-può-uscire-di-casa https://www.sipuousciredicasa.it/
 wolfram-alpha https://www.wolframalpha.com/input/?i=sum%28k%5E2*%28-1%29%5Ek%29
 github-home https://github.com/
@@ -194,3 +193,16 @@ gmaps https://www.google.com/maps/search/parks+near+me/@45.6000868,8.9331025,13z
 doom-emacs-quickstart https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#configuring-doom
 trans-top-final-act https://www.youtube.com/watch?v=yHAFQfSJP74&feature=youtu.be
 lilypond-docs-midi http://lilypond.org/doc/v2.21/Documentation/notation/creating-midi-output
+lilypond-stable-docs-midi http://lilypond.org/doc/v2.18/Documentation/notation/midi-output
+lilypond-snippets-search http://lsr.di.unimi.it/LSR/Search?q=color
+prolangs-as-people https://leftoversalad.com/c/015_programmingpeople/
+haskell-optparse-docs https://hackage.haskell.org/package/optparse-applicative
+stackhoogle https://www.stackage.org/lts-17.2
+haskell-x11-ffi-docs https://hackage.haskell.org/package/X11-1.8/docs/Graphics-X11-Xlib.html
+x11-docs https://tronche.com/gui/x/xlib/
+org-docs-tags https://orgmode.org/manual/Tags.html#Tags
+x11-tut https://tronche.com/gui/x/xlib-tutorial/
+chesstempo https://chesstempo.com/
+conrona-status-ita http://www.salute.gov.it/portale/nuovocoronavirus/dettaglioContenutiNuovoCoronavirus.jsp?lingua=italiano&id=5351&area=nuovoCoronavirus&menu=vuoto
+corona-faq-zone http://www.governo.it/it/articolo/domande-frequenti-sulle-misure-adottate-dal-governo/15638#zone
+corona-regole-aggiuntive-lombardia https://www.regione.lombardia.it/wps/portal/istituzionale/HP/coronavirus/misure

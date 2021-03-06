@@ -1,0 +1,19 @@
+#!/bin/sh
+
+usage() {
+    echo "Usage: vid-crop INPUT_VID BEGINNING_MIN ENDING_MIN OUTPUT_VID"
+
+    exit 1
+}
+
+[[ $# -ne 4 ]] && usage
+
+IN="$1"
+BEGIN_MINS="$2"
+END_MINS="$3"
+OUT="$4"
+
+BEGIN_SECS=$(mins-to-secs $BEGIN_MINS)
+END_SECS=$(mins-to-secs $END_MINS)
+
+ffmpeg -i "$IN" -ss "$BEGIN_SECS" -t "$END_SECS" "$OUT"

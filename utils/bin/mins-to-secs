@@ -1,0 +1,16 @@
+#!/bin/sh
+
+usage() {
+    echo "Usage: mins-to-secs MINS"
+
+    exit 1
+}
+
+[[ $# -ne 1 ]] && usage
+
+MINS="$1"
+
+MINS_WO_SECS=$(echo "$MINS" | awk -F':' '{print $1}')
+SECS_WO_MINS=$(echo "$MINS" | awk -F':' '{print $2}')
+
+echo "$((60 * MINS_WO_SECS + SECS_WO_MINS))"
