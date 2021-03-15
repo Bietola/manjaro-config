@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# Parse flags
+DB_MODE=false
+while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
+  -d | --debug )
+    echo "DB MODE ACTIVE"
+    DB_MODE=true
+    ;;
+esac; shift; done
+if [[ "$1" == '--' ]]; then shift; fi
+
+usage() {
+    echo "Usage: sul [--debug] [SUL_SCRIPT]"
+
+    exit 1
+}
+
+[[ $# -gt 1 ]] && usage
+
+# Gather directories in which to search scripts
+SCRIPT_DIRS=()
+
+# Bash scripts
+SCRIPT_DIRS=("${SCRIPT_DIRS[@]}" $(ls /config/utils/bin))
+
+# TODO: Implement fzf
+[[ $# -eq 1 ]] && { echo "WIP"; exit 1; }
+
+echo "WIP"

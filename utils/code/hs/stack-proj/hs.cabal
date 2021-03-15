@@ -24,14 +24,13 @@ source-repository head
   location: https://github.com/githubuser/hs
 
 library
-  exposed-modules:
-      Lib
   other-modules:
       Paths_hs
   hs-source-dirs:
       src
   build-depends:
       base >=4.7 && <5
+    , time
     , turtle
   default-language: Haskell2010
 
@@ -45,6 +44,7 @@ executable hs-exe
   build-depends:
       base >=4.7 && <5
     , hs
+    , time
     , turtle
   default-language: Haskell2010
 
@@ -59,5 +59,6 @@ test-suite hs-test
   build-depends:
       base >=4.7 && <5
     , hs
+    , time
     , turtle
   default-language: Haskell2010

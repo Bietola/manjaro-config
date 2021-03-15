@@ -1,0 +1,5 @@
+#!/bin/sh
+
+function sul { echo $(/config/utils/bin/sul "$1"); }
+
+echo "$(sul tst2)"

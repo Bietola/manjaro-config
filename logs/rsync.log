@@ -1071,3 +1071,42 @@ knausj_talon/text/
 sending incremental file list
 sending incremental file list
 --------------DONE----------------
+sending incremental file list
+sending incremental file list
+--------------DONE----------------
+sending incremental file list
+sending incremental file list
+--------------DONE----------------
+sending incremental file list
+sending incremental file list
+--------------DONE----------------
+--------------DONE----------------
+sending incremental file list
+sending incremental file list
+--------------DONE----------------
+sending incremental file list
+sending incremental file list
+--------------DONE----------------
+sending incremental file list
+./
+system.conf
+          1,777 100%    0.00kB/s    0:00:00            1,777 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=3/5)
+user.conf
+          1,200 100%    1.14MB/s    0:00:00            1,200 100%    1.14MB/s    0:00:00 (xfr#2, to-chk=2/5)
+sending incremental file list
+--------------DONE----------------
+sending incremental file list
+sending incremental file list
+sending incremental file list
+created directory /modprobe.d
+./
+blacklist.conf
+              0 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=0/2)
+sending incremental file list
+sending incremental file list
+sending incremental file list
+./
+blacklist.conf
+              0 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=0/2)
+sending incremental file list
+sending incremental file list

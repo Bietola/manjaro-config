@@ -1,7 +1,16 @@
 #!/bin/sh
 
+# Parse flags
+GO_TO_DIR=0
+while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
+  -d | --dir )
+    GO_TO_DIR=1
+    ;;
+esac; shift; done
+if [[ "$1" == '--' ]]; then shift; fi
+
 usage() {
-    echo "Usage: edscript [SCRIPT_NAME]"
+    echo "Usage: edscript [-d/--dir] [SCRIPT_NAME]"
 
     exit 1
 }
@@ -38,5 +47,14 @@ fi
 # NB. Needed so that HLS picks up the stack project things
 cd $SCRIPT_DIR
 
-# NB. sudo is needed for weird stack ownership reasons
-sudo $EDITOR "$SCRIPT_NAME.hs"
+if [[ $GO_TO_DIR -eq 0 ]]; then
+    # NB. sudo is needed for weird stack ownership reasons
+    sudo $EDITOR "$SCRIPT_NAME.hs"
+else
+    # This clipboard indirect method is emplyed because `cd` only works on the subshell of the script...
+    command -v xclip &>/dev/null \
+        || { echo "Please install xclip to continue"; exit 1; }
+
+    echo "cd $SCRIPT_DIR" | xclip -selection clipboard
+    echo "\`cd\` command to script directory placed in clipboard!"
+fi

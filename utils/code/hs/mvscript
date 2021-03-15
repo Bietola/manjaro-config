@@ -1,0 +1,55 @@
+#!/bin/sh
+
+usage() {
+    echo "Usage: mvscript [OLD_SCRIPT_NAME NEW_SCRIPT_NAME]"
+
+    exit 1
+}
+
+[[ $# -gt 2 || $# -eq 1 ]] && usage
+
+STACK_PROJ_SRC="./stack-proj/src"
+
+# Use fzf to get script name if it isn't provided
+if [[ $# -eq 0 ]]; then
+    OLD_SCRIPT_NAME=$(\
+        find "$STACK_PROJ_SRC" -type f -name *.hs -print0 |\
+        xargs -0 -n1 basename |\
+        awk -F. '{print $1}' |\
+        fzf \
+    )
+
+    if [[ -z $OLD_SCRIPT_NAME ]]; then
+        echo "Please choose script to continue"
+        exit 1
+    fi
+
+    printf "New script name: "
+    read NEW_SCRIPT_NAME
+else
+    OLD_SCRIPT_NAME="$1"
+    NEW_SCRIPT_NAME="$2"
+fi
+
+OLD_SCRIPT_DIR="$STACK_PROJ_SRC/$OLD_SCRIPT_NAME"
+NEW_SCRIPT_DIR="$STACK_PROJ_SRC/$NEW_SCRIPT_NAME"
+
+if [[ ! -e "$OLD_SCRIPT_DIR" ]]; then
+    echo "$OLD_SCRIPT_NAME does not exist (should be at $OLD_SCRIPT_DIR)"
+
+    exit 1
+fi
+
+mv "$OLD_SCRIPT_DIR" "$NEW_SCRIPT_DIR"
+
+# Change only name of source file
+cd "$NEW_SCRIPT_DIR"
+mv "$OLD_SCRIPT_NAME.hs" "$NEW_SCRIPT_NAME.hs"
+
+# Try to change name of compiled files (they might change over time...)
+mv "$OLD_SCRIPT_NAME.hi" "$NEW_SCRIPT_NAME.hi"
+mv "$OLD_SCRIPT_NAME.o" "$NEW_SCRIPT_NAME.o"
+mv "$OLD_SCRIPT_NAME" "$NEW_SCRIPT_NAME" # Executable
+
+echo "Done moving, new dir contents:"
+ls .

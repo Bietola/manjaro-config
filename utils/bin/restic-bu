@@ -14,5 +14,10 @@ usage() {
 RESTIC_BU_REPO="$1"
 TO_BU="$2"
 
-restic -r "$RESTIC_BU_REPO" --password-file "$TO_BU"/.restic-pw --verbose --verbose backup "$TO_BU"
+restic -r "$RESTIC_BU_REPO" \
+    --verbose --verbose \
+    --exclude-file "$TO_BU"/.restic-ignore \
+    --password-file "$TO_BU"/.restic-pw \
+    backup "$TO_BU"
+
 #TODO: use tie with this: > "$TO_BU"/tmp/restic-bu.log

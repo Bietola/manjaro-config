@@ -1,0 +1,38 @@
+#!/bin/sh
+
+usage() {
+    echo "Usage: runscript [SCRIPT_NAME]"
+
+    exit 1
+}
+
+[[ $# -gt 1 ]] && usage
+
+STACK_PROJ_SRC="./stack-proj/src"
+
+# Use fzf to get script name if it isn't provided
+if [[ $# -eq 0 ]]; then
+    SCRIPT_NAME=$(\
+        find "$STACK_PROJ_SRC" -type f -name *.hs -print0 |\
+        xargs -0 -n1 basename |\
+        awk -F. '{print $1}' |\
+        fzf \
+    )
+
+    if [[ -z $SCRIPT_NAME ]]; then
+        echo "Please choose script to continue"
+        exit 1
+    fi
+else
+    SCRIPT_NAME="$1"
+fi
+
+SCRIPT_DIR="$STACK_PROJ_SRC/$SCRIPT_NAME"
+
+if [[ ! -e "$SCRIPT_DIR" ]]; then
+    echo "$SCRIPT_NAME does not exist in $SCRIPT_DIR"
+
+    exit 1
+fi
+
+./"$SCRIPT_DIR/$SCRIPT_NAME.hs"

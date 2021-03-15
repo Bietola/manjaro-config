@@ -208,12 +208,6 @@ function lncfge() {
 # NB. contains info (pw and ssid) for connecting to wifi network
 # lncfge -h :e wpa_supplicant
 
-# blacklisted modules
-# TODO: Add this when Haskell implementation is over
-# NB. this is for making sound work, for **linux-sof** modules to make the mic work, older sound modules
-#     need to be blacklisted.
-# lncfge -h :e modprobe.d
-
 # mkinitcpio
 #
 # Essential edits from original:
@@ -226,8 +220,21 @@ function lncfge() {
 # Modified to make realtime audio support possible
 # lncfge -h /etc/security limits.conf
 
-# Custom systemd system services
-lncfge -s :m etc/systemd/system
+##################
+# Hardware Stuff #
+##################
+
+# blacklisted modules
+# NB. this is for making sound work, for **linux-sof** modules to make the mic work, older sound modules
+#     need to be blacklisted.
+lncfge -s :m etc/modprobe.d
+
+##################
+# Software Stuff #
+##################
+
+# For custom systemd system services and configuration files
+lncfge -s :m etc/systemd
 
 # talon
 #
@@ -273,6 +280,9 @@ lncfge :c qutebrowser
 
 # haskeline
 lncfge :h ".haskeline"
+
+# ghci
+lncfge :h ".ghci"
 
 # dunst
 lncfge :c dunst

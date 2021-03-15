@@ -1,0 +1,15 @@
+#!/bin/sh
+
+sul="/config/utils/bin"
+
+usage() {
+    echo "Usage: ls_hs_scripts"
+
+    exit 1
+}
+
+[[ $# -ne 0 ]] && usage
+
+HS_STACK_PROJ="/config/utils/code/hs/stack-proj"
+
+find $HS_STACK_PROJ/src -regex '^.*\.hs$'

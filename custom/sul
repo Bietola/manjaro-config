@@ -1,0 +1,5 @@
+# Root search path (prepended to all searches below)
+/config
+
+utils/bin/.*
+utils/code/hs/stack-proj/src/.*

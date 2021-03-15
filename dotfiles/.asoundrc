@@ -1,5 +1,21 @@
-defaults.bluealsa {
-    service "org.bluealsa"
-    device "BA:98:76:A2:F4:9B"
-    profile "a2dp"
+pcm.!default {
+    type plug
+    slave { pcm "jack" }
+}
+
+pcm.jack {
+    type jack
+    playback_ports {
+        0 system:playback_1
+        1 system:playback_2
+    }
+    capture_ports {
+        0 system:capture_1
+        1 system:capture_2
+    }
+}
+
+ctl.mixer0 {
+    type hw
+    card 0
 }

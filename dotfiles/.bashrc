@@ -26,6 +26,12 @@ shopt -s histappend
 #
 # TODO: Load from external file
 
+#############################################
+# "Import" the Great Script Utility Library #
+#############################################
+
+sul="/config/utils/bin"
+
 #################
 # Basic options #
 #################
@@ -53,6 +59,12 @@ export EDITOR="nvim"
 
 # Local scipts folders
 PATH="~/bin:$PATH"
+
+# Haskell scripts
+for hs_script in $($sul/ls-hs-scripts); do
+    hs_script=$(dirname $hs_script)
+    PATH="$hs_script:$PATH"
+done
 
 # Emacs bin folder
 PATH="~/.emacs.d/bin:$PATH"
