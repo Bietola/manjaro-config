@@ -1,0 +1,83 @@
+#!/bin/sh
+
+do_sub() {
+    FMT_STR="$1"
+    NEXT_N="$2"
+
+    echo "$FMT_STR" | sed "s/{}/$NEXT_N/g"
+}
+
+# Parse flags
+RESET_COUNT=false
+FORCE=false
+BACKUP=true
+PIPE_INPUT=false
+ECHO_FULL_PATH=false
+while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
+  -r | --reset-count )
+    RESET_COUNT=true
+    ;;
+  -f | --force )
+    FORCE=true
+    ;;
+  -nb | --no-backup )
+    BACKUP=false
+    ;;
+  -i | --pipe-input )
+    PIPE_INPUT=true
+    ;;
+  -fp | --echo-full-path )
+    ECHO_FULL_PATH=true
+    ;;
+esac; shift; done
+if [[ "$1" == '--' ]]; then shift; fi
+
+usage() {
+    echo "Usage: next DIR [FMT_STR]"
+
+    exit 1
+}
+
+[[ $# -gt 2 || $# -lt 1 ]] && usage
+
+DIR="$1"
+FMT_STR="${2:-\{\}}"
+
+NEXT_F="$DIR/.next"
+
+if [[ $RESET_COUNT = true ]]; then
+    echo 0 > "$NEXT_F"
+elif [[ -f "$NEXT_F" ]]; then
+    # TODO: Check if file is wellformed
+    false
+else
+    echo 0 > "$NEXT_F"
+fi
+
+NEXT_N="$(head -1 "$NEXT_F")"
+
+# Backup system
+if [[ $BACKUP = true ]]; then
+    OLD_FILE="$(do_sub "$FMT_STR" $NEXT_N)"
+    if [[ $FORCE = false && -e "$DIR/$OLD_FILE" ]]; then
+        echo "ERROR: "$DIR/$OLD_FILE" already exists! Please remove it to continue (or use --force)."
+
+        exit 1
+    fi
+fi
+
+echo $((NEXT_N + 1)) > "$NEXT_F"
+
+NEXT_NAME="$(do_sub "$FMT_STR" $NEXT_N)"
+
+if [[ $PIPE_INPUT = true ]]; then
+    while read line; do
+        echo "$line"
+    done > "$DIR/$NEXT_NAME"
+fi
+
+if [[ $ECHO_FULL_PATH = true ]]; then
+    echo "$DIR/$NEXT_NAME"
+else
+    echo "$NEXT_NAME"
+fi
