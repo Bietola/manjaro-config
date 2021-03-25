@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set -u
+set -x
+
+# TODO: Add usage
+
+CONFIG_DIR=/config
+
+USERS=( $@ )
+
+sudo groupadd config
+for user in "${USERS[@]}"; do
+    sudo usermod -a -G config "$user"
+done
+
+# NB. Folders need to be executable to entered in by, e.g., `cd`
+find "$CONFIG_DIR" -type d -print0 \
+    | xargs -0 -n1 sudo chmod ug=rwx,o=rx
+# NB. `+/-` are used by `chmod` instead of `=` to leave the already executable files
+#     (scripts mostly) executable.
+find "$CONFIG_DIR" -type f -print0 \
+    | xargs -0 -n1 sudo chmod ug+rw,o-w,o+r
