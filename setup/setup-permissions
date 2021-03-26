@@ -1,7 +1,7 @@
 #!/bin/sh
 
 set -u
-set -x
+# set -x # DB: Log all command to stdout
 
 # TODO: Add usage
 
@@ -14,10 +14,26 @@ for user in "${USERS[@]}"; do
     sudo usermod -a -G config "$user"
 done
 
-# NB. Folders need to be executable to entered in by, e.g., `cd`
-find "$CONFIG_DIR" -type d -print0 \
-    | xargs -0 -n1 sudo chmod ug=rwx,o=rx
-# NB. `+/-` are used by `chmod` instead of `=` to leave the already executable files
-#     (scripts mostly) executable.
-find "$CONFIG_DIR" -type f -print0 \
-    | xargs -0 -n1 sudo chmod ug+rw,o-w,o+r
+# # NB. Folders need to be executable to entered in by, e.g., `cd`
+# find "$CONFIG_DIR" -type d -print0 \
+    # | xargs -0 -n1 sudo chmod ug=rwx,o=rx
+# # NB. `+/-` are used by `chmod` instead of `=` to leave the already executable files
+# #     (scripts mostly) executable.
+# find "$CONFIG_DIR" -type f -print0 \
+    # | xargs -0 -n1 sudo chmod ug+rw,o-w,o+r
+
+# `X` means set executable only for folders (so that they can be entered in by, e.g., `cd`) and
+# files that are already executable (which are usually scripts).
+sudo chown -R root:config      "$CONFIG_DIR"
+sudo chmod -R u=rwX,g=rwX,o=rX "$CONFIG_DIR"
+
+# ACL is a more advanced way to set permissions over the classic `chmod/chown` approach;
+# Its settings override said classical approach and are not shown in a `ls -l` call (apart
+# from a `+` at the end which awknoledges the presence of ACL).
+#
+# They are used here to make newly created files and directories (`-d`, as in "default ACL permissions")
+# have `root:config` ownership, so that, e.g., config files created by `root` can be modified by members
+# of the `config` group.
+#
+# TODO: Find out if ACL needs any dependencies.
+sudo setfacl -dRm u:root:rwX,g:config:rwX,o:rX "$CONFIG_DIR"
