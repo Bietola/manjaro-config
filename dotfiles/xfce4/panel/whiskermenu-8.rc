@@ -1,5 +1,5 @@
 favorites=xfce4-terminal-emulator.desktop,xfce4-file-manager.desktop,xfce4-web-browser.desktop,xfce4-mail-reader.desktop
-recent=lmms.desktop,Alacritty.desktop,kazam.desktop,notepadqq.desktop,cadence.desktop,ardour.desktop,libreoffice-base.desktop,org.gnome.Nautilus.desktop,dasher.desktop,mscore.desktop
+recent=Alacritty.desktop
 button-icon=/usr/share/icons/whiskermenu-manjaro.svg
 button-single-row=false
 show-button-title=false
