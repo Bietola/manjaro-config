@@ -9,6 +9,7 @@ settings:
   content.media.audio_capture:
     https://discord.com: true
   content.notifications:
+    https://forum.manjaro.org: true
     https://web.telegram.org: true
     https://www.askpython.com: true
     https://www.chess.com: true

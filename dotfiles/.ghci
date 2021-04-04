@@ -1,3 +1,5 @@
 :set prompt "> "
 
 :set -XOverloadedStrings
+
+:set -package hosc

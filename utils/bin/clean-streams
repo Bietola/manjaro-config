@@ -1,0 +1,9 @@
+#!/bin/sh
+
+sul=/config/utils/bin
+
+HOME=/home/dincio
+
+for stream in $HOME/*.mp4; do
+    mv "$stream" "$($sul/next-name -fp "$HOME/streams/dump" {}.mp4)"
+done

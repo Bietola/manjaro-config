@@ -25,10 +25,21 @@ super + c ; x
     notify-send "sxhkd restarted" ;\
     sxhkd &
     # TODO: Finish implementation fo below script
-    # ~/bin/sxhkd-w-notify
 
-super + c ; t 
+super + c ; t a
+    alacritty -e nvim -c ':6' ~/.talon/user/knausj_talon/code/keys.py
+
+super + c ; t k
+    alacritty -e nvim -c ':123' ~/.talon/user/knausj_talon/code/keys.py
+
+super + c ; t h
+    alacritty -e nvim ~/.talon/user/knausj_talon/code/homophones.csv
+
+super + c ; t r
     alacritty -e ranger ~/.talon/user
+
+super + c ; t d
+    alacritty -e nvim ~/.talon/user/knausj_talon/settings/additional_words.csv
 
 super + t
     emacs ~/sync/life/org/1.todo.org
