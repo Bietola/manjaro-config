@@ -7,7 +7,9 @@
 config_version: 2
 settings:
   content.media.audio_capture:
+    https://commonvoice.mozilla.org: true
     https://discord.com: true
+    https://speech.talonvoice.com: true
   content.notifications:
     https://forum.manjaro.org: true
     https://web.telegram.org: true
