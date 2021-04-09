@@ -215,7 +215,7 @@ newsboat-docs https://newsboat.org/releases/2.12/docs/newsboat.html#_introductio
 github-stars https://github.com/Bietola?tab=stars
 cppref https://en.cppreference.com/w/
 org-matching-tags https://orgmode.org/manual/Matching-tags-and-properties.html#Matching-tags-and-properties
-hype https://www.hype.it/
+hype https://app.hype.it/
 talon-python-demo https://www.youtube.com/watch?v=ddFI63dgpaI&t=102s
 bluetooth-headphones-fix https://medium.com/@djorborn/bluetoothctl-failed-to-connect-org-bluez-error-failed-54040f12b4f8
 https://stackoverflow.com/a/31886632/3757407 linux-ownership-set-for-newly-created-files
@@ -224,3 +224,6 @@ linux-ownership-set-executable-only-for-dirs https://unix.stackexchange.com/a/41
 linux-permissions-acl-vs-chmod https://unix.stackexchange.com/questions/364517/difference-between-chmod-vs-acl
 talon-speech-recognition-setup https://talon.wiki/getting_started/#speech-recognition-engine
 linux-musicians-forum https://linuxmusicians.com/
+stack-vim https://vi.stackexchange.com/
+cerro-multe https://cerromaggiore.multeonline.it/web/polizia-locale/polizia-locale
+CC https://github.com/easymotion/vim-easymotion

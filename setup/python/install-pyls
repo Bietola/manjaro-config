@@ -1,0 +1,7 @@
+#!/bin/sh
+
+echo "This is going to install pyls w/ all its current features onto the current venv."
+echo "WARNING: If no venv is active, the installation is going to be global!"
+echo "Consult: https://github.com/palantir/python-language-server for details"
+
+python3 -m pip install 'python-language-sever[all]'

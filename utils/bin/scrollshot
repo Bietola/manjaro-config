@@ -24,7 +24,7 @@ esac; done
 if [[ "${1:-}" == '--' ]]; then shift; fi
 
 usage() {
-    printf "Usage: scrollshot [DEST_FOLDER]\n"
+    printf "Usage: scrollshot DEST_FOLDER\n"
     printf "Flags:\n"
     printf "  --sleep-time/-st TIME: Time between screenshots in seconds\n"
     printf "  --help/-h:             Help\n"
@@ -33,16 +33,12 @@ usage() {
 }
 
 # if [[ $SHOW_HELP ]]; then
-#     usage 0
+    # usage 0
 # fi
 
-[[ $# -gt 1 ]] && usage
+# [[ $# -ne 1 ]] && usage
 
-if [[ $# -eq 0 ]]; then
-    DEST=$(zenity --entry --text="Screenshots destination folder") ;\
-else 
-    DEST="$1"
-fi
+DEST="$1"
 
 if [[ -e "$DEST" && ! -d "$DEST" ]]; then
     echo "ERROR: $DEST is not a directory"
