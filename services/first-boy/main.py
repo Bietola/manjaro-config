@@ -57,7 +57,7 @@ def first_bot(max_spam_lv=1):
     # Bot Intro #
     #############
 
-    log('FirstBoy is awake')
+    # log('FirstBoy is awake')
 
     ############
     # Handlers #

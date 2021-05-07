@@ -2,22 +2,15 @@ import re
 import random
 from datetime import datetime
 
-dexpr_re = re.compile(r'(\d*?)d(\d*?)')
-def roll_from_dexpr(dexp):
+dexpr_re = re.compile(r'\b(\d*)d(\d*)\b')
+def parse_dexpr(dexp):
     if m := dexpr_re.match(dexp):
-        print(f'DB: {m.group(0)}')
+        print(f'DB: {m[0]}')
 
-        dice_num = int(m.group(1))
-        dice_val = int(m.group(2))
-
-        res = []
-        for i in range(0, dice_num):
-            res.append(random.randint(1, dice_val))
-
-        return res
+        return (int(m.group(1)), int(m.group(2)))
 
     else:
-        return []
+        return (0, 0)
 
 def roll(num, val):
     res = []
