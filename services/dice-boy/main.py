@@ -126,25 +126,40 @@ def bot_process(max_spam_lv=1):
         )
     )
 
-    def send_roll_msg(upd, ctx):
-        ctx.bot.send_message(
-            chat_id = upd.effective_chat.id,
-            text = "\n".join(
-                map(
-                    lambda tpl: f'roll {tpl[0] + 1}: {tpl[1]}',
-                    enumerate(reduce(list.__add__, map(
-                        lambda m: dice.rr_roll(int(m[1]), int(m[2])),
-                        ctx.matches
-                    )))
+    def send_roll_msg_cb(
+        process_matches = lambda m: dice.rr_roll(int(m[1]), int(m[2]))
+    ):
+        def thunk(upd, ctx):
+            ctx.bot.send_message(
+                chat_id = upd.effective_chat.id,
+                text = "\n".join(
+                    map(
+                        lambda tpl: f'roll {tpl[0] + 1}: {tpl[1]}',
+                        enumerate(reduce(list.__add__, map(
+                            process_matches,
+                            ctx.matches
+                        )))
+                    )
                 )
             )
-        )
+
+        return thunk
+
     dispatcher.add_handler(
         MessageHandler(
             (Filters.chat_type.group | Filters.chat_type.private) &
             Filters.regex(r'\b(\d*)d(\d*)\b'),
 
-            send_roll_msg
+            send_roll_msg_cb()
+        )
+    )
+
+    dispatcher.add_handler(
+        MessageHandler(
+            (Filters.chat_type.group | Filters.chat_type.private) &
+            Filters.regex(r'\b(\d*)\b'),
+
+            send_roll_msg_cb(lambda m: dice.rr_roll(1, int(m[0])))
         )
     )
 
