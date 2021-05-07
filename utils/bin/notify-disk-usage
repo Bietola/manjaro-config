@@ -1,7 +1,6 @@
-#!/bin/sh
-
+#!/bin/bash
 # Parse flags
-SLEEP_TIME=10
+SLEEP_TIME=20
 while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
   -st | --sleep-time )
     shift # Consume flag
@@ -29,6 +28,6 @@ usage() {
 DEVICE="${1:-/dev/nvme0n1p4}" # Default device is main linux partition on richard computer
 
 while true; do
+    notify-send -t $(( (SLEEP_TIME + 1) * 1000 )) "$(df -H "$DEVICE" | tail -1 | awk '{print $5}')"
     sleep "$SLEEP_TIME"
-    notify-send "$(df -H "$DEVICE" | tail -1 | awk '{print $5}')"
 done

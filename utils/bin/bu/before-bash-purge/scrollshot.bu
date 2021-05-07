@@ -1,0 +1,67 @@
+#!/bin/sh
+
+set -u
+
+sul=/config/utils/bin
+
+# Parse flags
+SLEEP_TIME=3
+SHOW_HELP=false
+while [[ "${1:-}" =~ ^- && ! "${1:-}" == "--" ]]; do case $1 in
+  -st | --sleep-time )
+    shift # Shift for flag
+    SLEEP_TIME="$1"; shift
+    ;;
+  -h | --help )
+    shift # Shift for flag
+    SHOW_HELP=true
+    ;;
+  *)
+    printf "Unknown flag: $1\n"
+    exit 1
+    ;;
+esac; done
+if [[ "${1:-}" == '--' ]]; then shift; fi
+
+usage() {
+    printf "Usage: scrollshot DEST_FOLDER\n"
+    printf "Flags:\n"
+    printf "  --sleep-time/-st TIME: Time between screenshots in seconds\n"
+    printf "  --help/-h:             Help\n"
+
+    exit ${1:-1}
+}
+
+# if [[ $SHOW_HELP ]]; then
+    # usage 0
+# fi
+
+# [[ $# -ne 1 ]] && usage
+
+DEST="$1"
+
+if [[ -e "$DEST" && ! -d "$DEST" ]]; then
+    echo "ERROR: $DEST is not a directory"
+    exit 1
+fi
+
+if [[ ! -e "$DEST" ]]; then
+    echo "WARNING: Creating $DEST"
+    mkdir -p "$DEST"
+fi
+
+sleep 5
+notify-send "Started screenshotting"
+while true; do
+    # TODO: Stop here if a given key combination is received
+    #       (Maybe use named pipes)
+
+    sleep "$SLEEP_TIME" # NB: It is important to wait *before* the screenshot is taken, so that the page loads properly
+
+    FULLNAME="$($sul/next-name -fp "$DEST" '{}.png')"
+    scrot "$FULLNAME"
+    notify-send "Created $FULLNAME"
+
+    xdotool key Page_Down
+done
+notify-send "Stopped screenshotting"

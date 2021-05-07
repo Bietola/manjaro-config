@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 usage() {
     echo "Usage: soyfy-mv PATH_TO_SOIFY"
     exit 1

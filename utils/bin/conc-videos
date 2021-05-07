@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 if [[ "$#" -lt 3 ]]; then
     exit "Usage: concat-videos OUTPUT-FILE INPUT-FILES..."
 fi

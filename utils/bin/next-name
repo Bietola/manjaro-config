@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 do_sub() {
     FMT_STR="$1"
     NEXT_N="$2"

@@ -1,0 +1,5 @@
+# Length of all pdfs in a table with their names
+find . | perl -ne 'next unless /\.\/((.*?)\.pdf)$/; print "s$2: ", `/sul/pdf-wc $1`'
+
+# Like above but for video duration (and done better)
+ls | perl -ne '/^(.*2020-(\d+)-(\d+).*\.mkv)$/ && printf("20-$2-$3: %f\n", `/sul/video-duration "$1"`)'

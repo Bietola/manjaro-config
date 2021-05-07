@@ -1,0 +1,9 @@
+#!/bin/sh
+
+usage() {
+    echo "Usage: zenity-askpass [ZENITY-ARGS]"
+
+    exit 1
+}
+
+zenity --password $@

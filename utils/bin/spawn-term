@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 if [[ "$TERM" =~ "alacritty" ]]; then
     if [[ $# -eq 0 ]]; then
         "$TERM"

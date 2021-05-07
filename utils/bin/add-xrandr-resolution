@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 # Usage
 if [[ $# != 2 ]]; then
     echo "Usage: add-xrandr-resolution RES_WDITH RES_HEIGHT"

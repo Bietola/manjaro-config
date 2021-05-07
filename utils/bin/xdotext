@@ -1,0 +1,12 @@
+#!/bin/bash
+usage() {
+    echo "Usage: xdotext TEXT"
+
+    exit 1
+}
+
+[[ $# -ne 1 ]] && usage
+
+TEXT="$1"
+
+..

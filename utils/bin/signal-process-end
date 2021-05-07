@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 if [[ $# -ne 1 && $# -ne 2 ]]; then
     echo "Usage: signal-process-end PROCESS_NAME [VOLUME]"
     exit 1

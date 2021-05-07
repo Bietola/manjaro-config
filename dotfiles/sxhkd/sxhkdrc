@@ -1,14 +1,14 @@
 # TODO: Substitute every mention to `alacritty` with `$TERM` once environment works
 
-########
-# Test #
-########
+#*************#
+#****magic****#
+#*************#
 
 ⍋
     notify-send "$(fortune)"
 
 ########################
-# show useful tooltips #
+# Show useful tooltips #
 ########################
 
 super + g ; f
@@ -26,8 +26,14 @@ super + c ; x
     sxhkd &
     # TODO: Finish implementation fo below script
 
+super + c ; t l
+    alacritty -e ranger ~/.talon/user/knausj_talon/lang
+
 super + c ; t a
     alacritty -e nvim -c ':6' ~/.talon/user/knausj_talon/code/keys.py
+
+super + c ; t s
+    alacritty -e nvim ~/.talon/user/knausj_talon/text/symbols.talon
 
 super + c ; t k
     alacritty -e nvim -c ':123' ~/.talon/user/knausj_talon/code/keys.py
@@ -67,6 +73,18 @@ super + d
     discord
 
 ##################
+# External Media #
+##################
+
+super + shift + a
+    SUDO_ASKPASS=/sul/zenity-askpass sudo -A mount -a 2>&1 |\
+        /sul/largs /sul/notify-or "All devices remounted: $(/sul/lsmnt | tr '\n' ',')"
+
+super + shift + e
+    TO_UMOUNT="$(/sul/lsmnt | dmenu)" ;\
+    SUDO_ASKPASS=/sul/zenity-askpass sudo -A umount "$TO_UMOUNT" 2>&1 | /sul/largs /sul/notify-or "$TO_UMOUNT unmounted"
+
+##################
 # Power commands #
 ##################
 
@@ -81,7 +99,7 @@ alt + shift + r
 ##########################
 
 super + shift + t
-    ~/bin/toggle-touchpad | xargs notify-send
+    ~/bin/toggle-touchpad 2>&1 | xargs notify-send
 
 #######################
 # Brightness controls #
@@ -161,4 +179,5 @@ super + shift + ctrl + p
 ########################
 
 super + shift + alt + t
+    THING="$(/sul/lsmnt | dmenu)" ;\
     notify-send "Testing"

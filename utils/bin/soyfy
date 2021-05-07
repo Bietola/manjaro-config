@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 echo "$@" |\
     awk '{ print tolower($0) }' |\
     sed 's/ /-/g' |\

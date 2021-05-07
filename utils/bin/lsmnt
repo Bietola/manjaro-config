@@ -1,0 +1,10 @@
+#!/bin/bash
+usage() {
+    echo "Usage: lsmnt"
+
+    exit 1
+}
+
+[[ $# -ne 0 ]] && usage
+
+lsblk | tail -n+2 | awk '/\/\w+/ {print $7}'

@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 blueman-tray 2>&1 > /dev/null &
 stalonetray 2>&1 > /dev/null
 killall blueman-tray

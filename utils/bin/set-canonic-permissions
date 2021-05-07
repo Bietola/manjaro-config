@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 USAGE="Usage: set-canonic-permissions USER GROUP FOLDER [EXECUTABLE_FILES/FOLDERS_WITH_EXECUTABLES...]"
 
 if [[ "$#" -lt 3 ]]; then

@@ -1,0 +1,21 @@
+#!/bin/bash
+usage() {
+    echo "Usage: notify-or OR_MSGS... -do MSG"
+    echo "WIP: -t for time"
+
+    exit 1
+}
+
+[[ $# -lt 1 ]] && usage
+
+OR_MSGS="${*%%h*}"
+MSG="${*##*-do}"
+
+echo "$OR_MSGS"
+echo "$MSG"
+
+if [[ -z "$MSG" ]]; then
+    notify-send "$OR_MSGS"
+else
+    notify-send "$MSG"
+fi

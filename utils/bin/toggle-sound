@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 ON_OR_OFF=$(amixer -c 0 sget Master | tail -n1 | cut -d' ' -f8)
 
 if [[ "$ON_OR_OFF" == "[on]" ]]; then

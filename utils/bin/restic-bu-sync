@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 TO_BU=/home/dincio/sync
 RESTIC_BU_REPO="rclone:rem:restic-home-bu"
 

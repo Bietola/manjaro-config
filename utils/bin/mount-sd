@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 # Actually mount sd
 mount -o rw,umask=0 /dev/sdb1 /sd
 

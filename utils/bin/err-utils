@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 # File to which all errors must be written to
 ERR_FILE=/tmp/err
 

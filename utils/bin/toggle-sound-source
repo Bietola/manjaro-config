@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 set -u
 
 HP_VOL=$(~/bin/show-vol 0 Headphone)

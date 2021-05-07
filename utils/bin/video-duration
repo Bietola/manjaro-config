@@ -1,0 +1,10 @@
+#!/bin/bash
+usage() {
+    echo "Usage: video-duration VIDEO_FILE"
+
+    exit 1
+}
+
+[[ $# -ne 1 ]] && usage
+
+ffprobe -v quiet -of csv=p=0 -show_entries format=duration "$1"

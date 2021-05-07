@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 set -u
 
 sul=/config/utils/bin

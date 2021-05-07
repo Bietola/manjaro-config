@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 insult() {
     echo "Who put you on the planet? HughUhgughu!"
 }

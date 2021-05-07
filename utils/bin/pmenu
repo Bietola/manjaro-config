@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 # Usage info
 usage_1="Usage 1: pmenu WANTED_CREDENTIAL_INFO [DMENU_ARGS...]"
 usage_2="Usage 2: pmenu list-credentials"

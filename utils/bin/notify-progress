@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 set -u
 
 if [[ $# -lt 3 ]]; then

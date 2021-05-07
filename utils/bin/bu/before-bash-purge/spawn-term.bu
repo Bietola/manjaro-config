@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if [[ "$TERM" =~ "alacritty" ]]; then
+    if [[ $# -eq 0 ]]; then
+        "$TERM"
+    else
+        "$TERM" -e "$@"
+    fi
+else
+    # Terminals for which this works:
+    # - st
+
+    "$TERM" "$@"
+fi

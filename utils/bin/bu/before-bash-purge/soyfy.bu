@@ -1,0 +1,6 @@
+#!/bin/sh
+
+echo "$@" |\
+    awk '{ print tolower($0) }' |\
+    sed 's/ /-/g' |\
+    sed 's/_/-/g'

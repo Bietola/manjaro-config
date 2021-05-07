@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 echo 'WARNING: the github repository "~/reps/hosts/" will be used for the update.'
 echo 'You might want to update the repository before running this script for a true update.'
 echo 'OTHER WARNING: also, a password is needed at the end...'

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+usage() {
+    echo 'Usage: largs [XARGS_ARGS...]'
+    echo 'NB. See `man xargs` for explanation of XARGS_ARGS'
+    echo 'NB. This script basically calls `xargs -0 -n1` among other things'
+
+    exit 1
+}
+
+tr '\n' '\0' | xargs -0 -n1 "$@"
