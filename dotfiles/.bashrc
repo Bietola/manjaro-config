@@ -18,7 +18,9 @@ shopt -s checkwinsize
 shopt -s expand_aliases
 
 # Enable history appending instead of overwriting.  #139609
+# Also make history file size bigger
 shopt -s histappend
+export HISTFILESIZE=1000
 
 ########################
 # Start of custom part #

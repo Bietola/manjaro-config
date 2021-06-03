@@ -1,28 +1,17 @@
 #!/bin/bash
-if [[ "$#" -lt 3 ]]; then
+
+if [[ "$#" -lt 2 ]]; then
     exit "Usage: concat-videos OUTPUT-FILE INPUT-FILES..."
 fi
 
-if [[ -n $(cat to-concat.txt) ]]; then
-    exit "Name designated for temp file (to-concat.txt) already exists in current path"
+if [ -n "$(for a in "$@"; do if [ -n "$(echo "$a" | grep '[[:space:]]')" ]; then echo "$a"; fi; done)" ]; then
+    exit "This command doesn't work with filenames using spaces"
 fi
 
-if [[ -n $(cat "$1") ]]; then
-    exit "Output file already exists in current path."
-fi
+OUT="$1"; shift
+IARGS="$(for arg in $@; do printf '%s' "-i $arg "; done)"
 
-touch to-concat.txt
-
-for arg in "$@"; do
-    # Skip output file
-    if [[ "$arg" == "$1" ]]; then
-        continue
-    fi
-
-    echo "file $arg" >> to-concat.txt
-done
-
-ffmpeg -f concat -safe 0 -i to-concat.txt -c copy "$1"
-
-# Cleanup
-rm -rf to-concat.txt
+ffmpeg $IARGS -filter_complex \
+    "[0:v][0:a][1:v][1:a] concat=n=2:v=1:a=1 [outv] [outa]" \
+    -map "[outv]" -map "[outa]" \
+    "$OUT"

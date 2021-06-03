@@ -1,0 +1,5 @@
+#!/bin/sh
+
+BOXES_REP=/config/reps/boxes
+
+"$BOXES_REP/out/boxes" -f "$BOXES_REP/boxes-config" "$@"

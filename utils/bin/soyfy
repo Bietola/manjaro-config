@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "$@" |\
-    awk '{ print tolower($0) }' |\
+
+awk '{ print tolower($0) }' |\
     sed 's/ /-/g' |\
     sed 's/_/-/g'

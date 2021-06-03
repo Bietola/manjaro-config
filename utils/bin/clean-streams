@@ -4,5 +4,7 @@ sul=/config/utils/bin
 HOME=/home/dincio
 
 for stream in $HOME/*.mp4; do
-    mv "$stream" "$($sul/next-name -fp "$HOME/streams/dump" {}.mp4)"
+    # mv "$stream" "$($sul/next-name -fp "$HOME/streams/dump" "{}.$(basename "$stream")")"
+    mv  "$stream" "$($sul/next-name -fp "$HOME/streams/dump" "{}.$(basename "$stream")")"
+
 done

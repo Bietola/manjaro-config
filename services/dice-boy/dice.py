@@ -3,6 +3,7 @@ import random
 from datetime import datetime
 
 dexpr_re = re.compile(r'\b(\d*)d(\d*)\b')
+
 def parse_dexpr(dexp):
     if m := dexpr_re.match(dexp):
         print(f'DB: {m[0]}')

@@ -50,6 +50,9 @@ super + c ; t d
 super + t
     emacs ~/sync/life/org/1.todo.org
 
+super + x
+    alacritty -e nvim +'set filetype=mex' ~/sync/life/mex/main
+
 ###########################
 # Quickly launch programs #
 ###########################
@@ -68,6 +71,9 @@ super + f
 
 super + r
     alacritty -e ranger
+
+super + shift + r
+    alacritty -e sudo ranger
 
 super + d
     discord

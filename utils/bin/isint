@@ -1,0 +1,11 @@
+#!/bin/sh
+
+function isint() {
+    TO_TST="$1"
+
+    [ -n "$(printf "%s" "$TO_TST" | egrep '^[[:digit:]]+$')" ]
+}
+
+if isint hello; then
+    echo hello
+fi
