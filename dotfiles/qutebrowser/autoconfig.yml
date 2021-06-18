@@ -7,12 +7,14 @@
 config_version: 2
 settings:
   content.geolocation:
+    https://www.google.com: true
     https://www.trenord.it: true
   content.media.audio_capture:
     https://commonvoice.mozilla.org: true
     https://discord.com: true
     https://speech.talonvoice.com: true
   content.notifications.enabled:
+    https://allpoetry.com: true
     https://forum.manjaro.org: true
     https://promo-italia.com: false
     https://web.telegram.org: true

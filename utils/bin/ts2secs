@@ -1,0 +1,14 @@
+#!/bin/env python3
+
+import re
+import sys
+
+ts_re = re.compile(r'^(\d+?):(\d+?)$')
+
+for arg in sys.argv[1:]:
+    if m := ts_re.match(arg):
+        hs = 60 * 60 * int(m.group(1))
+        ms = 60 * int(m.group(2))
+        print(hs + ms)
+    else:
+        exit(f'ERR: Invalid timestamp: {arg}')

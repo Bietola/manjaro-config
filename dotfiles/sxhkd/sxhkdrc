@@ -51,7 +51,7 @@ super + t
     emacs ~/sync/life/org/1.todo.org
 
 super + x
-    alacritty -e nvim +'set filetype=mex' ~/sync/life/mex/main
+    alacritty -e nvim +'OpenMexMain'
 
 ###########################
 # Quickly launch programs #
@@ -77,6 +77,16 @@ super + shift + r
 
 super + d
     discord
+    
+super + w
+    WORD=$(zenity --entry --text="Word to lookup") ;\
+    [ -n "$WORD" ] && alacritty -e nvim \
+        +'echo "loading definition..."' \
+        +"$(printf 'call append(0,         systemlist("dict               %s"))' "$WORD")" \
+        +'call append(line("$"), ["ITA TRANSLATION:", ""])' \
+        +"$(printf 'call append(line("$"), systemlist("dict -d fd-eng-ita %s"))' "$WORD")" \
+        +'normal! gg' \
+        +'sil !xdotool key super+space'
 
 ##################
 # External Media #
@@ -84,7 +94,8 @@ super + d
 
 super + shift + a
     SUDO_ASKPASS=/sul/zenity-askpass sudo -A mount -a 2>&1 |\
-        /sul/largs /sul/notify-or "All devices remounted: $(/sul/lsmnt | tr '\n' ',')"
+        /sul/largs /sul/notify-or "All devices remounted" ;\
+    notify-send "$(/sul/lsmnt | tr '\n' ',')"
 
 super + shift + e
     TO_UMOUNT="$(/sul/lsmnt | dmenu)" ;\
@@ -119,6 +130,9 @@ super + ctrl + plus
 
 super + ctrl + minus
     set-brightness -10
+
+super + ctrl + r
+    redshift -O 3000
 
 ###################
 # Volume controls #
