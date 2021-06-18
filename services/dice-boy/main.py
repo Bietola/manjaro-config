@@ -113,53 +113,22 @@ def bot_process(max_spam_lv=1):
             'roll',
             lambda upd, ctx: ctx.bot.send_message(
                 chat_id = upd.effective_chat.id,
-                text = "\n".join(
-                    map(
-                        lambda tpl: f'roll {tpl[0] + 1}: {tpl[1]}',
-                        enumerate(dice.rr_roll(
-                            int(ctx.args[0]),
-                            int(ctx.args[1])
-                        ))
-                    )
-                )
+                text = dice.roll_dice_exp(ctx.args[0]).__repr__()
             )
         )
     )
 
-    def send_roll_msg_cb(
-        process_matches = lambda m: dice.rr_roll(int(m[1]), int(m[2]))
-    ):
-        def thunk(upd, ctx):
-            ctx.bot.send_message(
+
+    log(f'Dice handler active (time: {cur_time()})', spam_lv=2)
+    dispatcher.add_handler(
+        MessageHandler(
+            (Filters.chat_type.group | Filters.chat_type.private) &
+            Filters.regex(r'.*'),
+
+            lambda upd, ctx: ctx.bot.send_message(
                 chat_id = upd.effective_chat.id,
-                text = "\n".join(
-                    map(
-                        lambda tpl: f'roll {tpl[0] + 1}: {tpl[1]}',
-                        enumerate(reduce(list.__add__, map(
-                            process_matches,
-                            ctx.matches
-                        )))
-                    )
-                )
+                text = dice.roll_dice_exp(ctx.match.string).__repr__()
             )
-
-        return thunk
-
-    dispatcher.add_handler(
-        MessageHandler(
-            (Filters.chat_type.group | Filters.chat_type.private) &
-            Filters.regex(r'\b(\d*)d(\d*)\b'),
-
-            send_roll_msg_cb()
-        )
-    )
-
-    dispatcher.add_handler(
-        MessageHandler(
-            (Filters.chat_type.group | Filters.chat_type.private) &
-            Filters.regex(r'\b(\d*)\b'),
-
-            send_roll_msg_cb(lambda m: dice.rr_roll(1, int(m[0])))
         )
     )
 
