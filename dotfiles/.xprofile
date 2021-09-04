@@ -5,13 +5,19 @@ setxkbmap -option caps:escape
 dunst &
 
 # Blue light is evil
-redshift -O 3000
+redshift -PO 3000
 
 # Start clipboard history manager daemon
 anamnesis --start
 
 # Evergreen trees are a staple at this point
 feh --bg-fill ~/sync/img/desktops/evergreen-tre.jpg
+
+# Map first chonk button of pad to middle mouse button
+xsetwacom set $(xsetwacom --list devices | perl -ne '/.*pad.*id: (\d*)/ && printf("$1\n")') Button 1 2
+
+# To bring out all the resolutions
+/sul/xrandr-add-resolutions doadd
 
 ##################################################
 # Things That Could Probably Be Systemd Services #

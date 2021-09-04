@@ -1,0 +1,16 @@
+#!/bin/sh
+
+usage() {
+    echo "Usage: pdf-cat-all ROOT_PATH"
+
+    exit 1
+}
+
+[ $# -ne 1 ] && usage
+
+ROOT_PATH="$1"
+
+for f in $(find "$ROOT_PATH" -name '*.pdf'); do
+    printf ':------:%s:\n' "$f"
+    pdftk "$f" cat output - uncompress | strings
+done

@@ -78,13 +78,21 @@ super + shift + r
 super + d
     discord
     
-super + w
+super + w ; e
     WORD=$(zenity --entry --text="Word to lookup") ;\
     [ -n "$WORD" ] && alacritty -e nvim \
         +'echo "loading definition..."' \
         +"$(printf 'call append(0,         systemlist("dict               %s"))' "$WORD")" \
         +'call append(line("$"), ["ITA TRANSLATION:", ""])' \
         +"$(printf 'call append(line("$"), systemlist("dict -d fd-eng-ita %s"))' "$WORD")" \
+        +'normal! gg' \
+        +'sil !xdotool key super+space'
+
+super + w ; i
+    WORD=$(zenity --entry --text="Parola da definire") ;\
+    [ -n "$WORD" ] && alacritty -e nvim \
+        +'echo "loading definition..."' \
+        +"$(printf 'call append(0,         systemlist("dict -d fd-ita-eng %s"))' "$WORD")" \
         +'normal! gg' \
         +'sil !xdotool key super+space'
 
@@ -131,7 +139,7 @@ super + ctrl + plus
 super + ctrl + minus
     set-brightness -10
 
-super + ctrl + r
+super + s ; r
     redshift -O 3000
 
 ###################
@@ -149,7 +157,7 @@ super + minus
 super + m
     ~/bin/toggle-sound-mute
 
-super + s
+super + a
     notify-send "$(~/bin/toggle-sound-source | tail -n1)"
 
 super + u

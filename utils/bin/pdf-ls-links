@@ -1,10 +1,32 @@
-#!/bin/bash
+#!/bin/sh
 usage() {
-    echo "Usage: pdf-ls-links PDF_FILE"
+    echo "Usage: pdf-ls-links [-c/--clean] PDF_FILE"
 
     exit 1
 }
 
-[[ $# -ne 1 ]] && usage
+# Parse flags
+CLEAN=false
+while [ -n "$(printf "%s\n" "$1" | grep '^-')" -a ! "$1" == '--' ]; do case $1 in
+    -cl | --clean )
+        shift
+        CLEAN=true
+        ;;
+    *)
+        printf "Unknown flag: $1\n"
+        exit 1
+esac; done
+if [ "$1" == '--' ]; then shift; fi
 
-pdftk "$1" cat output - uncompress | strings | grep -i http
+[ $# -ne 1 ] && usage
+
+PDF_FILE="$1"
+
+RES="$(pdftk "$PDF_FILE" cat output - uncompress | strings | grep -i http)"
+
+$CLEAN && {
+    # Maybe put `| tail +3` for skipping two weird stdout lines that get always printed...?
+    RES="$(echo "$RES" | perl -ne '/\((.*)\)/ && printf("%s\n", $1)')"
+}
+
+echo "$RES"

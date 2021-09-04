@@ -1,0 +1,12 @@
+#!/bin/sh
+
+LOCAL_PATH=~/.local/share/OpenBoard/
+REMOTE_PATH=rem:shrdots/OpenBoard/
+BU_PATH=~/tmp/OpenBoard.bu/
+
+echo 'Downlaoding backup from remote...'
+rclone copy -P "$REMOTE_PATH" "$BU_PATH"
+printf "Done with backup (path: $BU_PATH)\n"
+
+printf "Syncing to $REMOTE_PATH"
+rclone sync --create-empty-src-dirs -P "$LOCAL_PATH" "$REMOTE_PATH"

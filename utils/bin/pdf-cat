@@ -1,0 +1,11 @@
+#!/bin/sh
+
+usage() {
+    echo "Usage: pdf-cat PDF_FILE"
+
+    exit 1
+}
+
+[ $# -ne 1 ] && usage
+
+pdftk "$1" cat output - uncompress | strings

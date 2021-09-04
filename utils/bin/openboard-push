@@ -1,0 +1,12 @@
+#!/bin/sh
+
+LOCAL_PATH=.local/share/OpenBoard/
+REM_PATH=rem:shrdots/OpenBoard/
+BU_PATH=~/tmp/OpenBoard.bu/
+
+echo 'Making backup...'
+rsync -av -P "$LOCAL_PATH" "$BU_PATH"
+printf "Done with backup (path: $BU_PATH)\n"
+
+printf "Syncing from $REM_PATH to $LOCAL_PATH"
+rclone sync --create-empty-src-dirs -P "$REM_PATH" "$LOCAL_PATH"

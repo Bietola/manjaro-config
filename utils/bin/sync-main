@@ -1,0 +1,125 @@
+#!/bin/sh
+
+USER_MAIN_FOLDER="/home/dincio/sync"
+
+usage() {
+    echo "Usage: sync-main [-n\-r] DST_REPOSITORY [SYNC_ROOT]"
+
+    exit 1
+}
+
+# Parse flags
+DRY_RUN=true
+REVERSE_SYNC=false
+while [ -n "$(printf "%s\n" $1 | grep '^-')" -a ! "$1" == '--' ]; do case $1 in
+    -n | --no-dry-run )
+        shift
+        DRY_RUN=false
+        ;;
+    -r | --reverse-sync )
+        shift
+        REVERSE_SYNC=true
+        ;;
+    *)
+        printf "Unknown flag: $1\n"
+        exit 1
+esac; done
+if [ "$1" == '--' ]; then shift; fi
+
+# Parse positional args
+[ $# -lt 1 -o $# -gt 2 ] && usage
+
+DST_REP="$1"
+SYNC_ROOT="${2-NONE}" # Optional
+
+# Check if Hiccup drive is mounted
+[ "$DST_REP" == 'hiccup' -a -z "$(/sul/lsmnt | grep mnt-hiccup)" ] && {
+    printf 'Hiccup not mounted! Try to mount it? [y/N]: '
+    read ANS
+    if [ "$ANS" == 'y' ]; then
+        /sul/mnt-hiccup || exit 1
+    else
+        exit 1
+    fi
+}
+
+# Determine SRC and DST and sync functions
+# TODO: Make more complex src/dst system
+SRC="$USER_MAIN_FOLDER"
+
+if [ "$DST_REP" == 'hiccup' ]; then
+    DST=/mnt-hiccup/main/
+elif [ "$DST_REP" == 'rem' ]; then
+    DST=rem:main
+else
+    printf 'Unknown destination repository!: %s\n' "$DST_REP" &1>2
+    exit 1
+fi
+
+# Apply reverse sync if needed
+if $REVERSE_SYNC; then
+    TMP="$SRC"
+    SRC="$DST"
+    DST="$TMP"
+fi
+
+if [ "$SYNC_ROOT" == 'NONE' ]; then
+    if [ "$DST_REP" == 'rem' ] && $REVERSE_SYNC; then
+        # TODO: Make `rclone` command work for any rclone repository
+        # TODO: Make `rclone` command accept external configuration file for `exclude-from` flag
+        SYNC_ROOT="$(
+            rclone lsf -R --exclude-from <(echo '.git/') rem:main |\
+            fzf
+        )"
+    else
+        SYNC_ROOT="$(
+            cd "$SRC"
+            SUDO_ASKPASS=/sul/zenity-askpass sudo -A find . -type d |\
+                cut -c3- |\
+                fzf
+            cd 1>/dev/null -
+        )"
+    fi
+fi
+
+[ "$SYNC_ROOT" == '/' ] && {
+    printf 'No folder selected for sync\n' >&2
+    exit 1
+}
+
+SRC="$SRC/$SYNC_ROOT"
+DST="$DST/$SYNC_ROOT"
+
+# Decide sync commands
+if [ "$DST_REP" == 'hiccup' ]; then
+    DRY_RUN_COMMAND="sudo rsync --mkpath -anv $SRC $DST"
+    SYNC_COMMAND="sudo rsync --mkpath -P -av $SRC $DST"
+elif [ "$DST_REP" == 'rem' ]; then
+    DRY_RUN_COMMAND="rclone sync --dry-run -P $SRC $DST"
+    SYNC_COMMAND="rclone sync -P $SRC $DST"
+else
+    printf 'Unknown destination repository!: %s\n' "$DST_REP" &1>2
+    exit 1
+fi
+
+if $DRY_RUN; then
+    echo "$DRY_RUN_COMMAND"
+    $DRY_RUN_COMMAND
+
+    printf 'Dry run completed, continue with actual sync? [y/N]: '
+    read ANS
+    [ "$ANS" != 'y' ] && {
+        echo "Ok, exiting"
+        exit 0
+    }
+fi
+
+echo "Starting sync"
+echo "$SYNC_COMMAND"
+$SYNC_COMMAND
+
+# TODO: Offer choice to delete source directory (for moving)
+
+# Print some info for utility
+printf "src: $SRC\n"
+printf "dst: $DST\n"

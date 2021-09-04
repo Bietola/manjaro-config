@@ -1,0 +1,11 @@
+#!/bin/sh
+
+usage() {
+    echo "Usage: pdf-from-pptx PPTX_FILE"
+
+    exit 1
+}
+
+[ $# -ne 1 ] && usage
+
+soffice --headless --convert-to pdf "$1"

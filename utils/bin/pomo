@@ -11,7 +11,10 @@ def pomo(minutes=25, intro=None):
     if intro:
         os.system(f'notify-send "{intro}"')
 
-    time.sleep(minutes * 60)
+    for i in range(minutes):
+        time.sleep(60)
+        print(f'Message in {minutes - i - 1}min')
+
     os.system(
         f'notify-send -t {60 * 60 * 60 * 1000} "{minutes}min have passed"'
     )
