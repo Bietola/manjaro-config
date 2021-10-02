@@ -142,6 +142,32 @@ super + ctrl + minus
 super + s ; r
     redshift -O 3000
 
+super + s ; i
+    /sul/rotate-screen bottom-up
+
+super + s ; n
+    /sul/rotate-screen normal
+
+# Screen resolution
+
+super + s ; 5
+    /sul/xrandr-add-resolutions set .5
+
+super + s ; 6
+    /sul/xrandr-add-resolutions set .6
+
+super + s ; 7
+    /sul/xrandr-add-resolutions set .7
+
+super + s ; 8
+    /sul/xrandr-add-resolutions set .8
+
+super + s ; 9
+    /sul/xrandr-add-resolutions set .9
+
+super + s ; 1
+    /sul/xrandr-add-resolutions set 1
+
 ###################
 # Volume controls #
 ###################

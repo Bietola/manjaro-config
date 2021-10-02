@@ -1,0 +1,3 @@
+#!/bin/sh
+
+echo "/home/dincio/$(cd /home/dincio/sync; find . | fzf | tail -c +3;)"

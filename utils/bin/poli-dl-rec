@@ -1,0 +1,47 @@
+#!/bin/sh
+
+POLI_WEBEX_REP=/home/dincio/reps/PoliWebex
+RECS_STORAGE=/home/dincio/sync/recs
+RENAMING_SCRIPT='.dl-rename-rule'
+
+MAIN_TTY="$(tty)"
+
+REC_LINK="${1:-$(xclip -selection primary -o)}"
+
+STORAGE_DEST="$(
+    cd "$RECS_STORAGE"
+    { find . -type d; printf 'NEW'; } | fzf --prompt 'dl dest> '
+    cd - >/dev/null
+)"
+if [ -z "$STORAGE_DEST" ]; then
+    printf 'No destination selected\n'
+    exit 1
+elif [ "$STORAGE_DEST" == 'NEW' ]; then
+    printf 'Name of new folder: '
+    read STORAGE_DEST
+    mkdir -p "$RECS_STORAGE/$STORAGE_DEST"
+fi
+STORAGE_DEST="$RECS_STORAGE/$STORAGE_DEST"
+
+cd "$POLI_WEBEX_REP"
+
+REC_FILE="$(
+    # Get path relative to "$POLI_WEBEX_REP"
+    OUT="$(node poliwebex.js -v "$REC_LINK" | tee "$MAIN_TTY")"
+
+    echo "$OUT" | perl -ne '/.*Download complete:\s*(.*)$/ && print "$1\n"' | head -1
+)"
+
+# Rename only basename
+REC_FILE_DST="$(basename "$REC_FILE" | "$STORAGE_DEST/$RENAMING_SCRIPT")"
+REC_FILE_DST="$STORAGE_DEST/$REC_FILE_DST"
+
+printf 'Moving dled file to storage\n'
+printf 'Source: %s\n' "$REC_FILE"
+printf 'Destination: %s\n' "$REC_FILE_DST"
+
+mv "$REC_FILE" "$REC_FILE_DST"
+
+# TODO: Change name of rec
+
+cd - >/dev/null

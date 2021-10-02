@@ -1,0 +1,15 @@
+#!/bin/sh
+
+usage() {
+    echo "Usage: android-mnt DEVICE_N MNT_FOLDER"
+    echo "NB. Use android-ls to find dev num"
+
+    exit 1
+}
+
+[ $# -ne 2 ] && usage
+
+DEVICE_N="$1"
+MNT_FOLDER="$2"
+
+simple-mtpfs --device "$DEVICE_N" "$MNT_FOLDER"

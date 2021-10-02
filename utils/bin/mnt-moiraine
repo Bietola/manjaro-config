@@ -1,0 +1,9 @@
+#!/bin/sh
+
+DEV_N="$( \
+    simple-mtpfs -l |\
+    grep 'AlcatelOneTouch Idol 3 small (MTP)' |\
+    perl -ne '/(\d+):/ && print("$1\n")'
+)"
+
+sudo simple-mtpfs --device "$DEV_N" /mnt-moiraine

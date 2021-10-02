@@ -12,6 +12,13 @@ usage() {
 DRY_RUN=true
 REVERSE_SYNC=false
 while [ -n "$(printf "%s\n" $1 | grep '^-')" -a ! "$1" == '--' ]; do case $1 in
+    -to )
+        shift
+        ;;
+    -from )
+        shift
+        REVERSE_SYNC=true
+        ;;
     -n | --no-dry-run )
         shift
         DRY_RUN=false
@@ -33,6 +40,7 @@ DST_REP="$1"
 SYNC_ROOT="${2-NONE}" # Optional
 
 # Check if Hiccup drive is mounted
+# TODO: Generalize for other external drives
 [ "$DST_REP" == 'hiccup' -a -z "$(/sul/lsmnt | grep mnt-hiccup)" ] && {
     printf 'Hiccup not mounted! Try to mount it? [y/N]: '
     read ANS
@@ -43,14 +51,18 @@ SYNC_ROOT="${2-NONE}" # Optional
     fi
 }
 
-# Determine SRC and DST and sync functions
-# TODO: Make more complex src/dst system
+# Initialize source (might be switched with DST later)
 SRC="$USER_MAIN_FOLDER"
 
+# External hard drives
+# TODO: Generalize for other external drives
 if [ "$DST_REP" == 'hiccup' ]; then
+    DST_TYPE=ext-mem
     DST=/mnt-hiccup/main/
-elif [ "$DST_REP" == 'rem' ]; then
-    DST=rem:main
+# Rclone reps
+elif [ "$DST_REP" == 'rem' -o "$DST_REP" == 'db' ]; then
+    DST_TYPE=rclone
+    DST="$DST_REP":main
 else
     printf 'Unknown destination repository!: %s\n' "$DST_REP" &1>2
     exit 1
@@ -64,11 +76,10 @@ if $REVERSE_SYNC; then
 fi
 
 if [ "$SYNC_ROOT" == 'NONE' ]; then
-    if [ "$DST_REP" == 'rem' ] && $REVERSE_SYNC; then
-        # TODO: Make `rclone` command work for any rclone repository
+    if [ "$DST_TYPE" == 'rclone' ] && $REVERSE_SYNC; then
         # TODO: Make `rclone` command accept external configuration file for `exclude-from` flag
         SYNC_ROOT="$(
-            rclone lsf -R --exclude-from <(echo '.git/') rem:main |\
+            rclone lsf -R --exclude-from <(echo '.git/') "$DST" |\
             fzf
         )"
     else
@@ -91,10 +102,10 @@ SRC="$SRC/$SYNC_ROOT"
 DST="$DST/$SYNC_ROOT"
 
 # Decide sync commands
-if [ "$DST_REP" == 'hiccup' ]; then
+if [ "$DST_TYPE" == 'ext-mem' ]; then
     DRY_RUN_COMMAND="sudo rsync --mkpath -anv $SRC $DST"
     SYNC_COMMAND="sudo rsync --mkpath -P -av $SRC $DST"
-elif [ "$DST_REP" == 'rem' ]; then
+elif [ "$DST_TYPE" == 'rclone' ]; then
     DRY_RUN_COMMAND="rclone sync --dry-run -P $SRC $DST"
     SYNC_COMMAND="rclone sync -P $SRC $DST"
 else

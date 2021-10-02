@@ -1,0 +1,15 @@
+#!/bin/sh
+
+PROP='Coordinate Transformation Matrix'
+
+# TODO: This is the old one
+# for device in "SYNA327E:00 06CB:CD4F Touchpad" \
+#                   "ELAN2514:00 04F3:2808 Stylus Pen (0)" \
+#                   "ELAN2514:00 04F3:2808 Stylus"; do
+# xinput set-prop "$device" --type=float "$PROP" "$@"
+# done
+
+for device in "ELAN2514:00 04F3:2808 Stylus Pen (0)" \
+                  "ELAN2514:00 04F3:2808 Stylus"; do
+xinput set-prop "$device" --type=float "$PROP" "$@"
+done

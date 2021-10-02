@@ -1,0 +1,28 @@
+#!/bin/sh
+
+usage() {
+    echo 'Usage: rotate-screen ORIENTATION'
+    echo 'Orientation: left-up | right-up | bottom-up | normal'
+
+    exit 1
+}
+
+[ $# -ne 1 ] && usage
+
+ORIENTATION="$1"
+
+if [ "$ORIENTATION" == 'left-up' ]; then
+    xrandr -o left
+    /sul/transform-input 0 -1 1 1 0 0 0 0 1
+elif [ "$ORIENTATION" == 'right-up' ]; then
+    xrandr -o right
+    /sul/transform-input 0 1 0 -1 0 1 0 0 1
+elif [ "$ORIENTATION" == 'bottom-up' ]; then
+    xrandr -o inverted
+    /sul/transform-input -1 0 1 0 -1 1 0 0 1
+elif [ "$ORIENTATION" == 'normal' ]; then
+    xrandr -o normal
+    /sul/transform-input 1 0 0 0 1 0 0 0 1
+else
+    echo 'Malformed orientation'
+fi
