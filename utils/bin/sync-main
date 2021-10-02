@@ -39,26 +39,20 @@ if [ "$1" == '--' ]; then shift; fi
 DST_REP="$1"
 SYNC_ROOT="${2-NONE}" # Optional
 
-# Check if Hiccup drive is mounted
-# TODO: Generalize for other external drives
-[ "$DST_REP" == 'hiccup' -a -z "$(/sul/lsmnt | grep mnt-hiccup)" ] && {
-    printf 'Hiccup not mounted! Try to mount it? [y/N]: '
-    read ANS
-    if [ "$ANS" == 'y' ]; then
-        /sul/mnt-hiccup || exit 1
-    else
-        exit 1
-    fi
-}
-
 # Initialize source (might be switched with DST later)
 SRC="$USER_MAIN_FOLDER"
 
 # External hard drives
-# TODO: Generalize for other external drives
-if [ "$DST_REP" == 'hiccup' ]; then
+if [ "$DST_REP" == 'hiccup' -o "$DST_REP" == 'moiraine' ]; then
     DST_TYPE=ext-mem
-    DST=/mnt-hiccup/main/
+    MOUNT_POINT="/mnt-$DST_REP"
+    MOUNT_COMMAND="/sul/mnt-$DST_REP"
+    # Android devices have special folders to delineate storage type
+    if [ "$DST_REP" == 'moiraine' ]; then
+        DST="$MOUNT_POINT/Internal shared storage/main"
+    else
+        DST="$MOUNT_POINT/main/"
+    fi
 # Rclone reps
 elif [ "$DST_REP" == 'rem' -o "$DST_REP" == 'db' ]; then
     DST_TYPE=rclone
@@ -67,6 +61,18 @@ else
     printf 'Unknown destination repository!: %s\n' "$DST_REP" &1>2
     exit 1
 fi
+
+# Check if selected external drive drive is mounted
+# TODO: Generalize for other external drives
+[ "$DST_TYPE" == 'ext-mem' -a -z "$(findmnt | grep "mnt-$DST_REP")" ] && {
+    printf "$DST_REP not mounted! Try to mount it? [y/N]: "
+    read ANS
+    if [ "$ANS" == 'y' ]; then
+        $MOUNT_COMMAND || exit 1
+    else
+        exit 1
+    fi
+}
 
 # Apply reverse sync if needed
 if $REVERSE_SYNC; then
