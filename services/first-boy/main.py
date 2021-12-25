@@ -153,9 +153,6 @@ def first_bot(max_spam_lv=1):
         target = minecraft.server_inactivity_checker(updater.bot)
     ).start()
 
-    # Load emojis
-    bi.init()
-
     # Start bot
     updater.start_polling()
 

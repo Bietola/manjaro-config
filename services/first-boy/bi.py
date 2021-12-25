@@ -14,18 +14,7 @@ HELP_MSG = 'Ciao 🅱i🅱🅱i, istruzioni per l\'uso:\n/bi: spamma emoji rando
 # Globals #
 ###########
 
-g_emojis = []
 g_last_emoji = {'emoji': '🅱', 'name': 'B'}
-
-######################################################
-# Init function (to be called before bot activation) #
-######################################################
-
-def init():
-    # Load emojis
-    global g_emojis
-    g_emojis = json.loads(Path('./assets/emojis.json').open().read())['emojis']
-    print('Loaded giant emoji json')
 
 ###################
 # Other functions #
@@ -58,8 +47,8 @@ def handler(upd, ctx):
             )
             return
         elif ctx.args[0] in ['nation', 'n']:
-            rand_emoji = random.choice(list(filter(lambda e: 'flag' in e['name'], g_emojis)))
+            rand_emoji = random.choice(list(filter(lambda e: 'flag' in e['name'], emjutl.db())))
             bify_then_send(rand_emoji, name_mod=lambda n: ' '.join(n.split()[1:]))
             return
 
-    bify_then_send(random.choice(g_emojis))
+    bify_then_send(random.choice(emjutl.db()))
