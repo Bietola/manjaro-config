@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/sul/sync-main -n -to db life/org

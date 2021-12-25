@@ -53,6 +53,14 @@ super + t
 super + x
     alacritty -e nvim +'OpenMexMain'
 
+#############################################
+# Reload configurations for when things jam #
+#############################################
+
+super + j ; k
+    notify-send "$(/sul/config-keyboard 2>&1)" ;\
+    notify-send 'Reloaded keyboard config'
+
 ###########################
 # Quickly launch programs #
 ###########################
@@ -60,24 +68,37 @@ super + x
 super + shift + Return
     alacritty
 
-super + e
+super + shift + o
+    alacritty -e /sul/fzp -o -kt
+
+super + o ; e
     emacs
 
-super + b
+super + o ; b
     qutebrowser
 
-super + f
+super + o ; f
     firefox
 
-super + r
+super + o ; r
     alacritty -e ranger
 
 super + shift + r
     alacritty -e sudo ranger
 
-super + d
+super + o ; d
     discord
+
+# TODO: Find "real" openboard command
+super + o ; o
+    /sul/openboard-tmp
     
+super + o ; t
+    telegram-desktop
+
+super + o ; m
+    musescore
+
 super + w ; e
     WORD=$(zenity --entry --text="Word to lookup") ;\
     [ -n "$WORD" ] && alacritty -e nvim \

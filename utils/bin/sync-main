@@ -1,9 +1,19 @@
 #!/bin/sh
 
+#####################
+# Utility functions #
+#####################
+
+# NONE
+
+###############
+# Script body #
+###############
+
 USER_MAIN_FOLDER="/home/dincio/sync"
 
 usage() {
-    echo "Usage: sync-main [-n\-r] DST_REPOSITORY [SYNC_ROOT]"
+    echo "Usage: sync-main [-pc/-n/-r] DST_REPOSITORY [SYNC_ROOT]"
 
     exit 1
 }
@@ -11,7 +21,14 @@ usage() {
 # Parse flags
 DRY_RUN=true
 REVERSE_SYNC=false
+LIST_DEVS=false
+ONLY_PRINT_COMMAND=false
+ANDROID_USE_EXTERNAL_STORAGE=false # Special flag to use sd card instead of internal memory storage
 while [ -n "$(printf "%s\n" $1 | grep '^-')" -a ! "$1" == '--' ]; do case $1 in
+    -list )
+        shift
+        LIST_DEVS=true
+        ;;
     -to )
         shift
         ;;
@@ -27,11 +44,25 @@ while [ -n "$(printf "%s\n" $1 | grep '^-')" -a ! "$1" == '--' ]; do case $1 in
         shift
         REVERSE_SYNC=true
         ;;
+    -pc | --print-command )
+        shift
+        ONLY_PRINT_COMMAND=true
+        ;;
+    -aext | --android-use-external-memory )
+        shift
+        ANDROID_USE_EXTERNAL_STORAGE=true
+        ;;
     *)
-        printf "Unknown flag: $1\n"
+        printf 1>&2 "Unknown flag: $1\n"
         exit 1
 esac; done
 if [ "$1" == '--' ]; then shift; fi
+
+# List devices and exit
+$LIST_DEVS && {
+    printf 1>&2 'Remote repositories:\nrem\ndb\nExternal devices:\nhiccup\nmoiraine\n'
+    exit 0
+}
 
 # Parse positional args
 [ $# -lt 1 -o $# -gt 2 ] && usage
@@ -49,7 +80,12 @@ if [ "$DST_REP" == 'hiccup' -o "$DST_REP" == 'moiraine' ]; then
     MOUNT_COMMAND="/sul/mnt-$DST_REP"
     # Android devices have special folders to delineate storage type
     if [ "$DST_REP" == 'moiraine' ]; then
-        DST="$MOUNT_POINT/Internal shared storage/main"
+        # Special flag to use sd card instead of internal memory storage
+        if $ANDROID_USE_EXTERNAL_STORAGE; then
+            DST="$MOUNT_POINT/SanDisk SD card/main"
+        else
+            DST="$MOUNT_POINT/Internal shared storage/main"
+        fi
     else
         DST="$MOUNT_POINT/main/"
     fi
@@ -58,14 +94,13 @@ elif [ "$DST_REP" == 'rem' -o "$DST_REP" == 'db' ]; then
     DST_TYPE=rclone
     DST="$DST_REP":main
 else
-    printf 'Unknown destination repository!: %s\n' "$DST_REP" &1>2
+    printf 1>&2 'Unknown destination repository!: %s\n' "$DST_REP" &1>2
     exit 1
 fi
 
-# Check if selected external drive drive is mounted
-# TODO: Generalize for other external drives
+# Check if selected external drive is mounted
 [ "$DST_TYPE" == 'ext-mem' -a -z "$(findmnt | grep "mnt-$DST_REP")" ] && {
-    printf "$DST_REP not mounted! Try to mount it? [y/N]: "
+    printf 1>&2 "$DST_REP not mounted! Try to mount it? [y/N]: "
     read ANS
     if [ "$ANS" == 'y' ]; then
         $MOUNT_COMMAND || exit 1
@@ -89,18 +124,28 @@ if [ "$SYNC_ROOT" == 'NONE' ]; then
             fzf
         )"
     else
+
+        # TODO/CC: Figure out how to sudo cd into android SRC
+        # echo "DB: Syncing from $SRC"
+        # exit 1
+
         SYNC_ROOT="$(
+            # TODO/CC: Figure out how to sudo cd into android SRC
+            #          (This doesn't work)
+            # sudo -A su
+
             cd "$SRC"
-            SUDO_ASKPASS=/sul/zenity-askpass sudo -A find . -type d |\
-                cut -c3- |\
-                fzf
+            SUDO_ASKPASS=/sul/zenity-askpass sudo -A \
+                find . -type d | cut -c3- | fzf
             cd 1>/dev/null -
+
+            exit
         )"
     fi
 fi
 
 [ "$SYNC_ROOT" == '/' ] && {
-    printf 'No folder selected for sync\n' >&2
+    printf 1>&2 'No folder selected for sync\n' >&2
     exit 1
 }
 
@@ -109,21 +154,21 @@ DST="$DST/$SYNC_ROOT"
 
 # Decide sync commands
 if [ "$DST_TYPE" == 'ext-mem' ]; then
-    DRY_RUN_COMMAND="sudo rsync --mkpath -anv $SRC $DST"
-    SYNC_COMMAND="sudo rsync --mkpath -P -av $SRC $DST"
+    DRY_RUN_COMMAND="sudo rsync --mkpath -anv '$SRC/' '$DST/'"
+    SYNC_COMMAND="sudo rsync --mkpath -P -av '$SRC/' '$DST/'"
 elif [ "$DST_TYPE" == 'rclone' ]; then
-    DRY_RUN_COMMAND="rclone sync --dry-run -P $SRC $DST"
-    SYNC_COMMAND="rclone sync -P $SRC $DST"
+    DRY_RUN_COMMAND="rclone sync --dry-run -P '$SRC' '$DST'"
+    SYNC_COMMAND="rclone sync -P '$SRC' '$DST'"
 else
-    printf 'Unknown destination repository!: %s\n' "$DST_REP" &1>2
+    printf 1>&2 'Unknown destination repository!: %s\n' "$DST_REP" &1>2
     exit 1
 fi
 
 if $DRY_RUN; then
     echo "$DRY_RUN_COMMAND"
-    $DRY_RUN_COMMAND
+    eval $DRY_RUN_COMMAND
 
-    printf 'Dry run completed, continue with actual sync? [y/N]: '
+    printf 1>&2 'Dry run completed, continue with actual sync? [y/N]: '
     read ANS
     [ "$ANS" != 'y' ] && {
         echo "Ok, exiting"
@@ -131,12 +176,12 @@ if $DRY_RUN; then
     }
 fi
 
-echo "Starting sync"
+echo >&2 "Starting sync"
 echo "$SYNC_COMMAND"
-$SYNC_COMMAND
+! $ONLY_PRINT_COMMAND && eval $SYNC_COMMAND 
 
 # TODO: Offer choice to delete source directory (for moving)
 
 # Print some info for utility
-printf "src: $SRC\n"
-printf "dst: $DST\n"
+printf 1>&2 "src: $SRC\n"
+printf 1>&2 "dst: $DST\n"

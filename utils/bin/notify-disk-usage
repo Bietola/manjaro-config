@@ -1,10 +1,15 @@
 #!/bin/bash
 # Parse flags
+HELP=false
 SLEEP_TIME=20
 while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
   -st | --sleep-time )
     shift # Consume flag
     SLEEP_TIME="$1"; shift
+    ;;
+  -h | --help )
+    shift # Consume flag
+    HELP=true
     ;;
   *)
     printf "Unknown flag: SHORT_NAME"
@@ -22,6 +27,8 @@ usage() {
 
     exit 1
 }
+
+$HELP && usage
 
 [[ $# -gt 1 ]] && usage
 

@@ -1,3 +1,50 @@
 #!/bin/sh
 
-echo "/home/dincio/$(cd /home/dincio/sync; find . | fzf | tail -c +3;)"
+# Parse flags
+DO_OPEN=false
+KILL_TERM=false
+while [ -n "$(printf "%s\n" $1 | grep '^-')" -a ! "$1" == '--' ]; do case $1 in
+    -o | --open )
+        shift
+        DO_OPEN=true
+        ;;
+    -kt | --kill-term )
+        shift
+        KILL_TERM=true
+        ;;
+    *)
+        printf "Unknown flag: $1\n"
+        exit 1
+esac; done
+if [ "$1" == '--' ]; then shift; fi
+
+usage() {
+    echo "Usage: fzp [-o/--open]"
+
+    exit 1
+}
+
+[ $# -ne 0 ] && usage
+
+# Root path in which `fzp` searches
+ROOT_PATH="/home/dincio/sync/$(cd /home/dincio/sync; find . | fzf | tail -c +3;)"
+
+echo "\"$ROOT_PATH\"" | xclip -selection clipboard
+
+echo "$ROOT_PATH"
+
+$DO_OPEN && {
+    # TODO: Find a way to make zathura work with xdg-open
+    if [ -n "$(echo "$ROOT_PATH" | grep '.*\.pdf$')" ]; then
+        nohup zathura "$ROOT_PATH" >/dev/null &
+    else
+        nohup xdg-open "$ROOT_PATH" >/dev/null &
+    fi
+}
+
+$KILL_TERM && {
+    notify-send -t 2000 'WAIT FOR TERMINAL CLOSE!'
+    sleep 1
+    xdotool key Super+Tab
+    xdotool key Super+Shift+c
+}

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/nix/store/287rps202ngpyshnd7q1fwf1yw1iln0h-user-environment/bin/OpenBoard

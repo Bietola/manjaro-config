@@ -1,0 +1,50 @@
+# Send flag
+def handler(upd, ctx):
+    if len(ctx.args) == 1:
+        if ctx.args[0] == 'play':
+            ctx.args = ctx.args[1:]
+            play(upd, ctx)
+
+flag_name_re = re.compile(r'^flag: (.*)$')
+def play(upd, ctx):
+    def send_msg(text):
+        ctx.bot.send_message(
+            chat_id = upd.effective_chat.id,
+            text = text
+        )
+
+    # Pick random flag to guess
+    rand_flag = random.choice(
+        list(filter(
+            lambda e: 'flag' in e['name'],
+            g_emojis
+        ))
+    )
+    rnd_flag_name = flag_name_re.match(rand_flag['name']).str()
+
+    send_msg(rand_flag['emoji'])
+
+    max_guesses = 5
+    guesses = {}
+    while True:
+        resp = wait_msg()
+
+        if guessses[resp.sender.id] >= max_guesses:
+            continue
+
+        if resp.text.to_lower() == rnd_flag_name.to_lower():
+            handle_win(upd, ctx, resp.sender)
+            break
+        else:
+            guesses[resp.sender.id] += 1
+            guesses_left = max_guesses - guesses[resp.sender.id]
+            send_msg(f'Wrong {resp.sender.id}, {guesses_left} guesses left')
+
+def handle_win(upd, ctx, winner):
+    def send_msg(text):
+        ctx.bot.send_message(
+            chat_id = upd.effective_chat.id,
+            text = text
+        )
+
+    send_msg(f'{winner.name} is the winner!')

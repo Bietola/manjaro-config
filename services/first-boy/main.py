@@ -9,6 +9,8 @@ import os
 import threading
 import time
 import inspect
+import emoji
+import json
 
 import utils
 from utils import eprint, SRC_PATH
@@ -16,7 +18,14 @@ from utils import eprint, SRC_PATH
 import timon
 import minecraft
 import register
+import bi
 from register import RegChats
+
+####################
+# Global Variables #
+####################
+
+# None for now
 
 ##################################
 # Helper Functions ans Constants #
@@ -132,6 +141,9 @@ def first_bot(max_spam_lv=1):
         )
     )
 
+    log(f'🅱 handler active (time: {cur_time()})', spam_lv=2)
+    dispatcher.add_handler(CommandHandler('bi', bi.handler))
+
     ###################
     # Start Things Up #
     ###################
@@ -140,6 +152,9 @@ def first_bot(max_spam_lv=1):
     threading.Thread(
         target = minecraft.server_inactivity_checker(updater.bot)
     ).start()
+
+    # Load emojis
+    bi.init()
 
     # Start bot
     updater.start_polling()

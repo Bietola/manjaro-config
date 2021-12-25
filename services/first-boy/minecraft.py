@@ -15,14 +15,22 @@ registered_chats = set()
 
 def stop_server():
     shell('minecraftd stop')
-    shell('systemctl stop logmein-hamachi')
+
+    # TODO: for when hamachi was used
+    # shell('systemctl stop logmein-hamachi')
 
 def start_server():
-    shell('systemctl start logmein-hamachi')
     shell('minecraftd start')
+
+    # TODO: for when hamachi was used
+    # shell('systemctl start logmein-hamachi')
+
 
 def get_server_status_desc():
     return shell('minecraftd status').decode('utf-8')
+
+def is_server_running():
+    return get_server_status_desc().split()[1]
 
 def get_players_num():
     """Get number of playing players, returns None when server is down"""
@@ -112,7 +120,9 @@ def server_inactivity_checker(bot):
     def service():
         while True:
             # Sleep before check
-            time.sleep(60 * 60 * 0.5)
+            # time.sleep(60 * 60 * 0.5)
+            # DB: Check every 10 secs
+            time.sleep(10)
 
             # Do check
             check_time = time.strftime("%H:%M:%S", time.localtime())

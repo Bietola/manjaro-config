@@ -1,0 +1,14 @@
+#!/usr/bin/env python3
+
+import fire
+from PIL import Image
+
+
+# 72 is the default for dnd dice grimorium map tiles
+def cli(img_path, tile_side=72):
+    img = Image.open(img_path)
+    w, h = img.size
+    print(w / tile_side, h / tile_side)
+
+
+fire.Fire(cli)

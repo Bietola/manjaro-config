@@ -1,0 +1,17 @@
+#!/bin/sh
+
+usage() {
+    echo "Usage: space [ROOT]"
+
+    exit 1
+}
+
+[ $# -gt 1 ] && usage
+
+ROOT="${1:-}"
+
+if [ -n "$ROOT" ]; then
+    du -hd1 "$ROOT" | sort -k1 -h
+else
+    du -hd1 | sort -k1 -h
+fi

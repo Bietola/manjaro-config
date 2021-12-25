@@ -1,5 +1,5 @@
-# Vim is the wea
-setxkbmap -option caps:escape
+# Ergonomics so my hands don't leave me
+/sul/config-keyboard
 
 # Desktop notifications
 dunst &

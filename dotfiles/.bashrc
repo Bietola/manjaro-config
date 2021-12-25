@@ -151,6 +151,10 @@ alias real="zathura ~/books/music/the-real-book.pdf"
 # Show public ip address
 alias show-ip4="wget http://checkip.dyndns.org/ -O - -o /dev/null | cut -d: -f 2 | cut -d\< -f 1"
 
+# "Interactive SSH", to fix BS not working in alacritty
+# https://github.com/alacritty/alacritty/issues/3932
+alias issh="TERM=xterm-256color ssh"
+
 # Clipboard IN SPAAAACE (space being the internet... I'm too tired to be witty)
 function cl1p-put() {
     curl -H "Content-Type: text/html; charset=UTF-8" -X POST --data "$2" https://api.cl1p.net/"$1"
