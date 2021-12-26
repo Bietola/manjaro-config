@@ -1,7 +1,7 @@
 import fire
 import telegram
 from telegram.ext import Updater
-from telegram.ext import CommandHandler 
+from telegram.ext import CommandHandler
 from functools import *
 from pathlib import Path
 import random
@@ -19,6 +19,7 @@ import timon
 import minecraft
 import register
 import bi
+import nation_game
 from register import RegChats
 
 ####################
@@ -143,6 +144,10 @@ def first_bot(max_spam_lv=1):
 
     log(f'🅱 handler active (time: {cur_time()})', spam_lv=2)
     dispatcher.add_handler(CommandHandler('bi', bi.handler))
+
+    # TODO: Also add query handler
+    log(f'Nation game handler active (time: {cur_time()})', spam_lv=2)
+    dispatcher.add_handler(nation_game.round_handler)
 
     ###################
     # Start Things Up #
