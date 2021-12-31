@@ -150,59 +150,31 @@ def first_bot(max_spam_lv=1):
     log(f'Nation game handler active (time: {cur_time()})', spam_lv=2)
     dispatcher.add_handler(nation_game.round_handler)
 
-    # def pipe_test(upd, ctx):
-    #     print('writing to pipe: ', ctx.args[0])
-    #     shell(f'echo \'{ctx.args[0]}\' > ./cgames/rps/pipes/inp')
-    # log(f'TEST handle active (time: {cur_time()})', spam_lv=2)
-    # dispatcher.add_handler(
-    #     CommandHandler(
-    #         'pipe',
-    #         pipe_test
-    #     )
-    # )
-
     ###################
     # Start Things Up #
     ###################
 
-    # # Start Periodic Checks
+    # # Minecraft server check
     # threading.Thread(
     #     target = minecraft.server_inactivity_checker(updater.bot)
     # ).start()
 
-    # # Get output of RPS
-    # def handle_cgames():
-    #     # Start rps
-    #     os.system(
-    #         'cd ./cgames/rps/; stdbuf -i0 -o0 -e0 ./rps <pipes/inp >pipes/out;'
-    #     )
-    # threading.Thread(
-    #     target = handle_cgames
-    # ).start()
+    # TODO: Start an RPS game for TESTING
+    def play_cgame(game):
+        proc = putl.start(
+            f'( cd ./cgames/{game}/; stdbuf -o0 ./a.out; )'
+        )
 
-    # threading.Thread(
-    #     target = lambda:
-    #         os.system('cat < ./cgames/rps/pipes/out')
-    # ).start()
+        putl.interact(
+            proc,
+            stdout=print,
+            stdin=lambda: ()
+            interrupt_sig='INTERRUPT'
+        )
 
-    # Get output of RPS
-    # def launch_cgames():
-    #     # Start rps
-    #     os.system(
-    #         'cd ./cgames/rps/; stdbuf -o0 ./rps <pipes/inp;'
-    #     )
-    # threading.Thread(
-    #     target = launch_cgames
-    # ).start()
-
-    # def recv_cgames_stdout():
-    #     # os.system('cat < ./cgames/rps/pipes/out')
-    #     with open('./cgames/rps/pipes/out') as fifo:
-    #         for line in fifo.readlines():
-    #             print(line)
-    # threading.Thread(
-    #     target = recv_cgames_stdout
-    # ).start()
+    threading.Thread(
+        target=lambda: play_cgame('rps')
+    ).start()
 
     # Start bot
     updater.start_polling()
