@@ -14,7 +14,6 @@ import json
 
 import utils
 from utils import eprint, shell, SRC_PATH
-import proc_utils as putl
 
 import timon
 import minecraft

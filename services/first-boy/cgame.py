@@ -1,3 +1,5 @@
+import proc_utils as putl
+
 g_current_cgame = ''
 g_curr_proc = None
 
