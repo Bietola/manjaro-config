@@ -21,6 +21,8 @@ import minecraft
 import register
 import bi
 import nation_game
+# TODO/CC
+# import cgame
 from register import RegChats
 
 ####################
@@ -150,6 +152,10 @@ def first_bot(max_spam_lv=1):
     log(f'Nation game handler active (time: {cur_time()})', spam_lv=2)
     dispatcher.add_handler(nation_game.round_handler)
 
+    # TODO: Turn this on
+    # log(f'CGames interface handler active (time: {cur_time()})', spam_lv=2)
+    # dispatcher.add_handler(cgame.handler)
+
     ###################
     # Start Things Up #
     ###################
@@ -158,23 +164,6 @@ def first_bot(max_spam_lv=1):
     # threading.Thread(
     #     target = minecraft.server_inactivity_checker(updater.bot)
     # ).start()
-
-    # TODO: Start an RPS game for TESTING
-    def play_cgame(game):
-        proc = putl.start(
-            f'( cd ./cgames/{game}/; stdbuf -o0 ./a.out; )'
-        )
-
-        putl.interact(
-            proc,
-            stdout=print,
-            stdin=lambda: ()
-            interrupt_sig='INTERRUPT'
-        )
-
-    threading.Thread(
-        target=lambda: play_cgame('rps')
-    ).start()
 
     # Start bot
     updater.start_polling()
