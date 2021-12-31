@@ -14,6 +14,7 @@ import json
 
 import utils
 from utils import eprint, shell, SRC_PATH
+import proc_utils as putl
 
 import timon
 import minecraft
@@ -149,16 +150,16 @@ def first_bot(max_spam_lv=1):
     log(f'Nation game handler active (time: {cur_time()})', spam_lv=2)
     dispatcher.add_handler(nation_game.round_handler)
 
-    def pipe_test(upd, ctx):
-        print('writing to pipe: ', ctx.args[0])
-        shell(f'echo \'{ctx.args[0]}\' > ./cgames/rps/pipes/inp')
-    log(f'TEST handle active (time: {cur_time()})', spam_lv=2)
-    dispatcher.add_handler(
-        CommandHandler(
-            'pipe',
-            pipe_test
-        )
-    )
+    # def pipe_test(upd, ctx):
+    #     print('writing to pipe: ', ctx.args[0])
+    #     shell(f'echo \'{ctx.args[0]}\' > ./cgames/rps/pipes/inp')
+    # log(f'TEST handle active (time: {cur_time()})', spam_lv=2)
+    # dispatcher.add_handler(
+    #     CommandHandler(
+    #         'pipe',
+    #         pipe_test
+    #     )
+    # )
 
     ###################
     # Start Things Up #
