@@ -13,6 +13,7 @@ class CGame:
         self.proc = None
         self.stdin_mutex = threading.Lock()
         self.stdin_next_msg = None
+        self.stdin_buffer = []
 
 
 g_cur_game = None
@@ -70,7 +71,26 @@ def start_cgame(upd, ctx):
         f'( cd ./cgames/{g_cur_game.name}/; stdbuf -o0 ./a.out; )'
     )
 
-    def pipe_usr_msg_to_stdin():
+    # TODO/CC: Confused stdin with stdout
+    def periodically_dump_buffer_to_stdin(
+        min_buffer_len=1,
+        wait_secs=3
+    ):
+        while True:
+            time.sleep(wait_secs)
+
+            global g_cur_game
+            g_cur_game.stdin_mutex.acquire()
+            buffer = g_cur_game.stdin_buffer
+
+            if len(buffer) >= min_buffer_len:
+                g_cur_game.stdin_buffer = []
+                g_cur_game.stdin_mutex.release()
+                return '\n'.join(buffer)
+            else:
+                g_cur_game.stdin_mutex.release()
+
+    def pipe_usr_msg_to_stdin_buffer():
         # TODO/WIP
         next_msg = None
         while True:
@@ -83,16 +103,22 @@ def start_cgame(upd, ctx):
             if next_msg is not None:
                 g_cur_game.stdin_next_msg = None
                 g_cur_game.stdin_mutex.release()
-                return next_msg
+                g_cur_game.stdin_buffer.append(next_msg)
             else:
                 g_cur_game.stdin_mutex.release()
+
+    threading.Thread(
+        target=pipe_usr_msg_to_stdin_buffer
+    ).start()
 
     # TODO: Use messages instead of stdin
     threading.Thread(
         target=lambda: putl.interact(
             g_cur_game.proc,
             stdout=send_msg,
-            stdin=pipe_usr_msg_to_stdin,
+            stdin=lambda: periodically_dump_buffer_to_stdin(
+                wait_secs=3,
+            ),
             interrupt_sig='INTERRUPT',
             log_interrupt=send_msg
         )
