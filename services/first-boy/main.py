@@ -21,7 +21,7 @@ import register
 import bi
 import nation_game
 # TODO/CC
-# import cgame
+import cgame
 from register import RegChats
 
 ####################
@@ -61,7 +61,10 @@ def first_bot(max_spam_lv=1):
     ################################
 
     utils.wait_until_connected(delay=20, trace=True)
-    updater = Updater(token='1516509922:AAHd36t-69qu1FolhavdCo6_qb_UJnFPix4', use_context=True)
+    updater = Updater(
+        token=Path('/tokens/telegram-bots/first-bot').read_text().strip(),
+        use_context=True
+    )
     dispatcher = updater.dispatcher
 
 
@@ -152,8 +155,8 @@ def first_bot(max_spam_lv=1):
     dispatcher.add_handler(nation_game.round_handler)
 
     # TODO: Turn this on
-    # log(f'CGames interface handler active (time: {cur_time()})', spam_lv=2)
-    # dispatcher.add_handler(cgame.handler)
+    log(f'CGames interface handler active (time: {cur_time()})', spam_lv=2)
+    dispatcher.add_handler(cgame.handler)
 
     ###################
     # Start Things Up #
