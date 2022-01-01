@@ -155,8 +155,8 @@ def first_bot(max_spam_lv=1):
     dispatcher.add_handler(nation_game.round_handler)
 
     # TODO: Turn this on
-    log(f'CGames interface handler active (time: {cur_time()})', spam_lv=2)
-    dispatcher.add_handler(cgame.handler)
+    # log(f'CGames interface handler active (time: {cur_time()})', spam_lv=2)
+    # dispatcher.add_handler(cgame.handler)
 
     ###################
     # Start Things Up #
