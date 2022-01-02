@@ -1,3 +1,6 @@
+# !IMPORTANT! File that contains bot token, ignored to avoid people stealing the bot
+token
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
