@@ -62,7 +62,7 @@ def first_bot(max_spam_lv=1):
 
     utils.wait_until_connected(delay=20, trace=True)
     updater = Updater(
-        token=Path('/tokens/telegram-bots/first-bot').read_text().strip(),
+        token=(Path(__file__).parent.resolve() / 'token').read_text().strip(),
         use_context=True
     )
     dispatcher = updater.dispatcher
