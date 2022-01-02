@@ -2,7 +2,9 @@ name		role
 -------------------:
 stefano		USER
 chicco		USER
-davide		CPU
+davide		USER
+daniele		USER
+crash       USER
 tina		CPU
 roosvelt	CPU
 sofi		CPU
@@ -18,7 +20,6 @@ nonnochuck	CPU
 jelly		CPU
 knuckles	CPU
 speakman	CPU
-daniele		CPU
 steve		CPU
 richard		CPU
 nonnolaser	CPU

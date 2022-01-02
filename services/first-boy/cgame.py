@@ -8,12 +8,14 @@ import proc_utils as putl
 from utils import eprint
 
 class CGame:
-    def __init__(self, name):
+    def __init__(self, name, letter_limit=None):
         self.name = name
         self.proc = None
+        self.letter_limit = letter_limit
         self.stdin_mutex = threading.Lock()
         self.stdin_next_msg = None
-        self.stdin_buffer = []
+        self.stdout_mutex = threading.Lock()
+        self.stdout_buffer = []
 
 
 g_cur_game = None
@@ -31,39 +33,18 @@ def start_cgame(upd, ctx):
             text=msg
         )
 
-    # TODO/CC: Make a special function that uses a dedicated thread to empty the buffer as a telegram message. The hook `send_msg` to this function and use it to just fill the buffer
-    # def send_msg_buffered(msg, wait_secs=3, max_buf_len=20):
-    #     if msg is None or len(msg) == 0:
-    #         eprint('ERR: NILMSG: Null/empty msg sent from `cgame.start_cgame`')
-    #         return
-
-    #     buffer = send_msg_buffered.buffer
-    #     timer = send_msg_buffered.timer
-
-    #     now = time.perf_counter()
-    #     elapsed = now - timer
-    #     print('DB: ', elapsed)
-    #     if len(buffer) >= max_buf_len or elapsed >= wait_secs:
-    #         print('DB: ', 'in')
-    #         send_msg('\n'.join(buffer))
-    #         timer = time.perf_counter()
-    #         send_msg_buffered.buffer = []
-
-    #     else:
-    #         buffer.append(msg)
-
-    # send_msg_buffered.buffer = []
-    # send_msg_buffered.timer = time.perf_counter()
-
     if len(ctx.args) == 0:
-        send_msg("Available games:\nRPS\nLupus in Tabula [WIP]\n")
+        send_msg("Available games:\n- rps\n- lit\n")
         return ConversationHandler.END
 
     # Start cgame
     cgame = ctx.args[0]
 
     global g_cur_game
-    g_cur_game = CGame(cgame)
+    g_cur_game = CGame(
+        name=cgame,
+        letter_limit=1 if cgame == 'lit' else None
+    )
 
     # TODO: Check if game is valid
 
@@ -72,25 +53,25 @@ def start_cgame(upd, ctx):
     )
 
     # TODO/CC: Confused stdin with stdout
-    def periodically_dump_buffer_to_stdin(
+    def periodically_dump_buffer_to_stdout(
         min_buffer_len=1,
-        wait_secs=3
+        wait_secs=1
     ):
         while True:
             time.sleep(wait_secs)
 
             global g_cur_game
-            g_cur_game.stdin_mutex.acquire()
-            buffer = g_cur_game.stdin_buffer
+            g_cur_game.stdout_mutex.acquire()
+            buffer = g_cur_game.stdout_buffer
 
             if len(buffer) >= min_buffer_len:
-                g_cur_game.stdin_buffer = []
-                g_cur_game.stdin_mutex.release()
-                return '\n'.join(buffer)
+                g_cur_game.stdout_buffer = []
+                g_cur_game.stdout_mutex.release()
+                send_msg('\n'.join(buffer))
             else:
-                g_cur_game.stdin_mutex.release()
+                g_cur_game.stdout_mutex.release()
 
-    def pipe_usr_msg_to_stdin_buffer():
+    def pipe_cgame_next_msg_to_stdin():
         # TODO/WIP
         next_msg = None
         while True:
@@ -103,22 +84,29 @@ def start_cgame(upd, ctx):
             if next_msg is not None:
                 g_cur_game.stdin_next_msg = None
                 g_cur_game.stdin_mutex.release()
-                g_cur_game.stdin_buffer.append(next_msg)
+                return next_msg
             else:
                 g_cur_game.stdin_mutex.release()
 
+    def pipe_stdout_to_cur_buffer(txt):
+        global g_cur_game
+        g_cur_game.stdout_mutex.acquire()
+        g_cur_game.stdout_buffer.append(txt)
+        g_cur_game.stdout_mutex.release()
+
     threading.Thread(
-        target=pipe_usr_msg_to_stdin_buffer
+        target=lambda: periodically_dump_buffer_to_stdout(
+            wait_secs=1,
+            min_buffer_len=1
+        )
     ).start()
 
     # TODO: Use messages instead of stdin
     threading.Thread(
         target=lambda: putl.interact(
             g_cur_game.proc,
-            stdout=send_msg,
-            stdin=lambda: periodically_dump_buffer_to_stdin(
-                wait_secs=3,
-            ),
+            stdout=pipe_stdout_to_cur_buffer,
+            stdin=pipe_cgame_next_msg_to_stdin,
             interrupt_sig='INTERRUPT',
             log_interrupt=send_msg
         )
@@ -129,9 +117,11 @@ def start_cgame(upd, ctx):
 
 def send_to_cur_game_stdin(upd, ctx):
     global g_cur_game
+    letter_lim = g_cur_game.letter_limit
     g_cur_game.stdin_mutex.acquire()
     # NB. Using `.lower()` for ergonomic purposes
-    g_cur_game.stdin_next_msg = upd.message.text.lower()
+    full_msg = upd.message.text.lower()
+    g_cur_game.stdin_next_msg = full_msg[:letter_lim] if letter_lim else full_msg
     g_cur_game.stdin_mutex.release()
 
 
@@ -141,7 +131,7 @@ def interrupt_cgame():
 
 
 handler = ConversationHandler(
-    entry_points=[CommandHandler('cgame', start_cgame)],
+    entry_points=[CommandHandler('cg', start_cgame)],
     states={
         PLAY_GAME: [MessageHandler(Filters.text, send_to_cur_game_stdin)]
         # HANDLE_WIN: [MessageHandler(Filters.photo, photo)]

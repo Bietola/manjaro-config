@@ -4,6 +4,9 @@ import threading
 import atomics
 
 
+CONTINUE = 1
+
+
 def start(executable_file):
     return subprocess.Popen(
         executable_file,
