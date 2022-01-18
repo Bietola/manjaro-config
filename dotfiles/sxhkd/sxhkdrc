@@ -4,6 +4,9 @@
 #****magic****#
 #*************#
 
+alt + Tab:
+    notify-send "$HELLO"
+
 ⍋
     notify-send "$(fortune)"
 
@@ -11,8 +14,14 @@
 # Show useful tooltips #
 ########################
 
-super + g ; f
+super + h ; f
     notify-send "$(cat ~/config/dotfiles/sxhkd/tooltips/talon-formatters)"
+
+super + h ; a
+    firefox ~/sync/life/org/assets/apl-kb-layouts.htm
+
+super + h ; s
+    sxiv ~/sync/life/org/assets/steno/std-kb-layout.jpg
 
 ######################
 # Quickly open files #
@@ -161,7 +170,10 @@ super + ctrl + minus
     set-brightness -10
 
 super + s ; r
-    redshift -O 3000
+    redshift -PO 3000
+
+super + s ; b
+    redshift -PO 3750
 
 super + s ; i
     /sul/rotate-screen bottom-up
