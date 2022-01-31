@@ -163,6 +163,9 @@ function cl1p-get() {
     curl https://api.cl1p.net/"$1"
 }
 
+# I might be personifying a bit too much
+alias children='ps auxf'
+
 ###############################################
 # Modifications Appended by External Programs #
 ###############################################

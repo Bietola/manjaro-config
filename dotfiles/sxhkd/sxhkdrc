@@ -156,6 +156,10 @@ alt + shift + r
 super + shift + t
     ~/bin/toggle-touchpad 2>&1 | xargs notify-send
 
+super + shift + v
+    keynav ;\
+    notify-send -t 1000 "Keynav on"
+
 #######################
 # Brightness controls #
 #######################
