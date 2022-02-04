@@ -1,2 +1,7 @@
 # Vim is the wae
-setxkbmap -option caps:escape
+setxkbmap -layout it -option caps:escape
+
+# Custom keys
+# <s-ù> => `
+# <altgr-ù> => ~
+xmodmap -e 'keycode  51 = ugrave 96 ugrave 96 asciitilde asciitilde asciitilde'
