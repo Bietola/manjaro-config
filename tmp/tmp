@@ -1,0 +1,6 @@
+#############
+# Clipboard #
+#############
+
+super + v
+    xfce4-clipman-history

@@ -149,6 +149,9 @@ function lncfg() {
 
     # Determine origin of config unit (unit is shorthand for file/directory)
     local orig="$DOTS_DIR/$unit_name"
+
+    echo "$orig"
+
     local orig=$(readlink -f "$orig") # TODO: Danger: $() call should probably be wrapped in quotes
 
     # Determine destination of config unit
@@ -227,23 +230,23 @@ function lncfge() {
 # blacklisted modules
 # NB. this is for making sound work, for **linux-sof** modules to make the mic work, older sound modules
 #     need to be blacklisted.
-lncfge -s :m etc/modprobe.d
+# lncfge -s :m etc/modprobe.d
 
 ##################
 # Software Stuff #
 ##################
 
 # For custom systemd system services and configuration files
-lncfge -s :m etc/systemd
+# lncfge -s :m etc/systemd
 
 # talon
 #
 # NB. This needs to be a hard link for scripts hot realoading to work
-lncfge -s :h ".talon/user"
-echo -e "\tNB. Only .talon/user is put into place by \`setup\`. For full talon setup instructions, go to the Talon Voice website."
+# lncfge -s :h ".talon/user"
+# echo -e "\tNB. Only .talon/user is put into place by \`setup\`. For full talon setup instructions, go to the Talon Voice website."
 
 # timidity
-lncfge :m etc/timidity
+# lncfge :m etc/timidity
 
 # bashrc
 lncfge :h ".bashrc"
@@ -258,7 +261,7 @@ lncfge :h ".xprofile"
 
 # asoundrc
 # NB. This is here mainly to make bluealsa work
-lncfge :h ".asoundrc"
+# lncfge :h ".asoundrc"
 
 # gitconfig
 lncfge :h ".gitconfig"
@@ -273,22 +276,22 @@ lncfge :c ranger
 lncfge :c sxhkd
 
 # xmonad
-lncfge :h ".xmonad"
+# lncfge :h ".xmonad"
 
 # qutebrowser
-lncfge :c qutebrowser
+# lncfge :c qutebrowser
 
 # haskeline
-lncfge :h ".haskeline"
+# lncfge :h ".haskeline"
 
 # ghci
-lncfge :h ".ghci"
+# lncfge :h ".ghci"
 
 # dunst
-lncfge :c dunst
+# lncfge :c dunst
 
 # rclone
-lncfge :c rclone
+# lncfge :c rclone
 
 # alacritty
 lncfge :c alacritty
