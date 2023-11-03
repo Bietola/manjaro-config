@@ -1,20 +1,30 @@
+# TODO: Find way to reintegrate using external shell scripts? (from /sul formerly).
+
 # Ergonomics so my hands don't leave me
-/sul/config-keyboard
+# /sul/config-keyboard
+
+# Vim is the wae
+setxkbmap -layout fi -option caps:escape
+
+# Custom keys
+# ITA
+# <s-ù> => `
+# <altgr-ù> => ~
+## xmodmap -e 'keycode  51 = ugrave 96 ugrave 96 asciitilde asciitilde asciitilde'
+# FI
+# ö (47  odiaeresis) => ograve
+# ä (48  adiaeresis) => agrave
+xmodmap -e 'keycode  47 = ograve Ograve Ograve Ograve Ograve Ograve Ograve'
+xmodmap -e 'keycode  48 = agrave Agrave Agrave Agrave Agrave Agrave Agrave'
 
 # Desktop notifications
-dunst &
+# dunst &
 
 # Blue light is evil
-redshift -PO 3000
-
-# Start clipboard history manager daemon
-anamnesis --start
-
-# Evergreen trees are a staple at this point
-feh --bg-fill ~/sync/img/desktops/evergreen-tre.jpg
+# redshift -PO 3000
 
 # Map first chonk button of pad to middle mouse button
-xsetwacom set $(xsetwacom --list devices | perl -ne '/.*pad.*id: (\d*)/ && printf("$1\n")') Button 1 2
+# xsetwacom set $(xsetwacom --list devices | perl -ne '/.*pad.*id: (\d*)/ && printf("$1\n")') Button 1 2
 
 # To bring out all the resolutions
 /sul/xrandr-add-resolutions doadd
@@ -30,7 +40,7 @@ xsetwacom set $(xsetwacom --list devices | perl -ne '/.*pad.*id: (\d*)/ && print
 sxhkd &
 
 # Needed to make timidity play nicely with pulseaudio
-timidity -iA &
+# timidity -iA &
 
 # The touchpad is dead, long live the mouse
-synclient TouchpadOff=1
+# synclient TouchpadOff=1

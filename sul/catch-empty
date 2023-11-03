@@ -1,0 +1,31 @@
+#!/bin/sh
+
+usage() {
+  echo "Usage: catch-empty [-er/--error ERR] [STR]"
+  echo "  NB. STR taken from stdin if not specified"
+
+  exit 1
+}
+
+#? [ $# -ne ARGS_NUM ] && usage
+
+# Parse flags
+ERR="err"
+while [ -n "$(printf "%s\n" $1 | grep '^-')" -a ! "$1" == '--' ]; do case $1 in
+    -er | --error )
+        shift
+        ERR="$1"; shift
+        ;;
+    *)
+        printf "Unknown flag: $1\n"
+        exit 1
+esac; done
+if [ "$1" == '--' ]; then shift; fi
+
+INP="${1:-"$(cat /dev/stdin)"}"
+
+if [ -z "$INP" ]; then
+    printf "$ERR\n"
+else
+    printf "$INP\n"
+fi

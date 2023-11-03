@@ -4,11 +4,15 @@
 #****magic****#
 #*************#
 
-alt + Tab:
-    notify-send "$HELLO"
-
 ⍋
     notify-send "$(fortune)"
+
+#######################
+#      Hacking       #
+#######################
+
+super + h ; f
+    $HOME/ctf/bin/clip-fuzz-file
 
 ########################
 # Show useful tooltips #
@@ -57,7 +61,7 @@ super + c ; t d
     alacritty -e nvim ~/.talon/user/knausj_talon/settings/additional_words.csv
 
 super + t
-    emacs ~/sync/life/org/1.todo.org
+    alacritty -e nvim ~/main/life/org/1.todo.org
 
 super + x
     alacritty -e nvim +'OpenMexMain'
@@ -90,6 +94,9 @@ super + o ; f
     firefox
 
 super + o ; r
+    alacritty -e ranger
+
+super + r
     alacritty -e ranger
 
 super + shift + r
@@ -125,6 +132,16 @@ super + w ; i
         +"$(printf 'call append(0,         systemlist("dict -d fd-ita-eng %s"))' "$WORD")" \
         +'normal! gg' \
         +'sil !xdotool key super+space'
+
+#############
+# Bluetooth #
+#############
+
+super + b
+    bluetooth on; sleep 4; blueman-manager
+
+super + shift + b
+    bluetooth off
 
 ##################
 # External Media #
@@ -247,12 +264,22 @@ super + ctrl + r
     NAME=editor-prompt "Name chapter created $LAST_TIMESTAMP ago: " ;\
     auto-timestamps set-current name "$NAME"
 
+#############
+# Clipboard #
+#############
+
+super + v
+    xfce4-clipman-history
+
 ###############
 # Credentials #
 ###############
 
 super + shift + p
     ~/bin/pmenu
+
+super + l ; i
+    /sul/browser-open-youtube2invidious
 
 ############
 # Pomodoro #

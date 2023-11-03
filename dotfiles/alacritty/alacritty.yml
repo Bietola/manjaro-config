@@ -1,2 +1,5 @@
 font:
+  normal:
+    family: MesloLGM Nerd Font Mono
+    style: Regular
   size: 18

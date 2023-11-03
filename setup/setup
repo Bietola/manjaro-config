@@ -275,6 +275,10 @@ lncfge :c ranger
 # sxhkd
 lncfge :c sxhkd
 
+# xfce4
+# Mostly for keyboard shortcuts emulating a tiled window manager.
+lncfge :c xfce4
+
 # xmonad
 # lncfge :h ".xmonad"
 

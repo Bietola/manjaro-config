@@ -1,0 +1,4 @@
+#!/bin/bash
+
+WATCH_ID=$(xclip -selection clipboard -o | rev | cut -d/ -f1 | rev)
+firefox https://yt.artemislena.eu/$WATCH_ID

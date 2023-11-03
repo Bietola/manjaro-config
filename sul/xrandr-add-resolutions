@@ -1,0 +1,112 @@
+#!/bin/bash
+
+# Configuration files
+OUTPUT_DEV_FILE=~/.xrandr-device
+
+# Default values
+DEF_RES_X=1920
+DEF_RES_Y=1080
+
+OUTPUT_DEV="$(head -1 "$OUTPUT_DEV_FILE" 2>/dev/null)"
+[ -z OUTPUT_DEV ] && OUTPUT_DEV=eDP1
+
+DB_MODE=false
+VERBOSE=false
+
+# Parse flags
+while [ -n "$(printf "%s\n" $1 | grep '^-')" -a ! "$1" == '--' ]; do case $1 in
+    -r | --default-resolution )
+        shift
+        DEF_RES_X="$1"; shift
+        DEF_RES_Y="$1"; shift
+        ;;
+    -D | --output-device )
+        shift
+        OUTPUT_DEV="$1"; shift
+        ;;
+    -db | --debug-mode )
+        shift
+        DB_MODE=true
+        ;;
+    -v | --verbose )
+        shift
+        VERBOSE=true
+        ;;
+    *)
+        printf "Unknown flag: $1\n"
+        exit 1
+esac; done
+if [ "$1" == '--' ]; then shift; fi
+
+# Positional arguments
+MODE="${1:-help}"
+DEF_MODE_NAME="$(printf '%dx%d' $DEF_RES_X $DEF_RES_Y)"
+SCALE_TO_SET="${2:-1}"
+
+# Function to calculate mode name from percentage of default resolution
+function mode-name-from-scale {
+    local SCALE="${1:-1}"
+
+    [ "$SCALE" == '1' ] && {
+        echo "$DEF_MODE_NAME"
+        echo "Default mode"
+        return 0
+    }
+
+    local RES_X="$(echo "$DEF_RES_X * $SCALE" | bc)"
+    local RES_Y="$(echo "$DEF_RES_Y * $SCALE" | bc)"
+    local MODE_INFO="$(gtf $RES_X $RES_Y 60 | grep Modeline | perl -ne '/Modeline (.*)/ && print("$1\n")' | tr -d \")"
+    local MODE_NAME="$(echo "$MODE_INFO" | awk '{print $1}')"
+
+    echo "$MODE_NAME"
+    echo "$MODE_INFO"
+}
+
+# Main
+if [[ "$MODE" == "help" ]]; then
+    printf "Pass a mode as first argument:\nlist\nsxhkd\ndoadd\nhelp\n"
+elif [ $MODE == 'get' ]; then
+    GET_PARAM="${2:?Please specify a parameter to get}"
+    if [ $GET_PARAM  == 'Device' ]; then
+        echo "$OUTPUT_DEV"
+    else
+        echo "No param named $GET_PARAM"
+    fi
+elif [[ "$MODE" == "set" ]]; then
+    MODE_TO_SET="$(mode-name-from-scale "$SCALE_TO_SET" | head -1)"
+
+    echo "Setting $MODE_TO_SET" 1>&2
+    xrandr --output "$OUTPUT_DEV" --mode "$MODE_TO_SET"
+else
+    if [[ "$MODE" == "list" ]]; then
+        printf "default: $DEF_MODE_NAME\n"
+    fi # TODO: Add sxhkd thing
+
+    for SCALE_NUM in $(seq 1 9); do
+        SCALE="$(echo "$SCALE_NUM * 0.1" | bc)"
+
+        RES="$(mode-name-from-scale "$SCALE")"
+        MODE_NAME="$(echo "$RES" | head -1)"
+        MODE_INFO="$(echo "$RES" | tail -1)"
+
+        if $DB_MODE; then
+            printf "info: '$MODE_INFO'\n"
+            printf "name: '$MODE_NAME'\n"
+        fi
+
+        if [[ "$MODE" == "doadd" ]]; then
+            xrandr --newmode $MODE_INFO
+            xrandr --addmode "$OUTPUT_DEV" "$MODE_NAME"
+        elif [[ "$MODE" == "sxhkd" ]]; then
+            printf "$(
+                printf "super + r ; $SCALE_NUM:\n"
+                printf "    xrandr --output $OUTPUT_DEV --mode $MODE_NAME\n"
+            )\n"
+        elif [[ "$MODE" == "list" ]]; then
+            echo "$SCALE: $MODE_NAME"
+            $VERBOSE && echo "$MODE_INFO"
+        else
+            printf "Choose a mode:\nlist\nsxhkd\ndoadd"
+        fi
+    done
+fi

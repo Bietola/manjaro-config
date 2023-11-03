@@ -1,0 +1,22 @@
+#!/usr/bin/perl
+
+$i = 0;
+foreach $l (split(/\n/, $ARGV[0])) {
+    chomp($l);
+    if ($i == 0) {
+        $h1 = $l;
+        $h1 =~ s/\t/ | /g;
+        $h1 = "| $h1 |";
+        print("$h1\n");
+        $h2 = $h1;
+        $h2 =~ s/[^|]/-/g;       
+        $h2 =~ s/-\|/:|/g;
+        print("$h2\n");
+        $i++;
+    }
+    else {
+        $l =~ s/\t/ | /g;
+        $l = "| $l |";
+        print("$l\n");
+    }
+}

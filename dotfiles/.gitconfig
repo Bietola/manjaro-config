@@ -30,3 +30,6 @@
 	cano = commit --amend --no-edit
 [init]
 	defaultBranch = main
+[safe]
+	directory = /config/dotfiles/nvim
+	directory = /config
