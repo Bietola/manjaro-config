@@ -147,12 +147,6 @@ ex ()
 #
 # TODO: Load from external file
 
-#############################################
-# "Import" the Great Script Utility Library #
-#############################################
-
-sul="/config/utils/bin"
-
 #################
 # Basic options #
 #################
@@ -178,14 +172,18 @@ export EDITOR="nvim"
 # Path #
 ########
 
+# The great and terrifying Super User Library
+PATH="/sul:$PATH"
+
 # Local scipts folders
 PATH="~/bin:$PATH"
 
-# Haskell scripts
-for hs_script in $($sul/ls-hs-scripts); do
-    hs_script=$(dirname $hs_script)
-    PATH="$hs_script:$PATH"
-done
+# # Haskell scripts
+# TODO: Fix this if and when needed
+# for hs_script in $(/sul/ls-hs-scripts); do
+#     hs_script=$(dirname $hs_script)
+#     PATH="$hs_script:$PATH"
+# done
 
 # Emacs bin folder
 PATH="~/.emacs.d/bin:$PATH"
@@ -205,6 +203,10 @@ PATH="$HOME/.r2env/bin:$PATH"
 # CTF scripts
 # (From CTF rep in home folder)
 PATH="$HOME/ctf/bin:$PATH"
+
+# Neorg notes scripts
+# (From notes rep in home folder)
+PATH="$HOME/notes/bin:$PATH"
 
 #########################
 # Git Utility Functions #
@@ -259,8 +261,18 @@ alias clip="xclip -selection clipboard"
 # Bash is tedious enough on its own
 alias cx="chmod +x"
 
-# In case of the immediate need of moral guidance.
+# In case of immediate need of moral guidance.
 alias real="zathura ~/books/music/the-real-book.pdf"
+
+# Copying stuff to phone internal storage
+function adb-internal() {
+    echo '1. Activate USB debugging throught dev settings on phone.'
+    echo '2. Allow this PC to use USB debugging'
+    echo '3. Copy to phone primary storage like this: adb push {} /storage/self/primary/{}'
+}
+function android-internal() {
+    adb-internal
+}
 
 # Egocentric git clone
 # function glone() {

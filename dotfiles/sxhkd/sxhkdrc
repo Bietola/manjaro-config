@@ -96,7 +96,7 @@ super + o ; f
 super + o ; r
     alacritty -e ranger
 
-super + r
+super + f
     alacritty -e ranger
 
 super + shift + r
@@ -269,14 +269,14 @@ super + ctrl + r
 #############
 
 super + v
-    xfce4-clipman-history
+    xfce4-popup-clipman
 
 ###############
 # Credentials #
 ###############
 
 super + shift + p
-    ~/bin/pmenu
+    /sul/pmenu
 
 super + l ; i
     /sul/browser-open-youtube2invidious
