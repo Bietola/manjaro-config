@@ -82,12 +82,18 @@ else
         printf "default: $DEF_MODE_NAME\n"
     fi # TODO: Add sxhkd thing
 
-    for SCALE_NUM in $(seq 1 9); do
+    for SCALE_NUM in $(seq 1 10); do
         SCALE="$(echo "$SCALE_NUM * 0.1" | bc)"
 
         RES="$(mode-name-from-scale "$SCALE")"
         MODE_NAME="$(echo "$RES" | head -1)"
         MODE_INFO="$(echo "$RES" | tail -1)"
+
+        if [[ $SCALE_NUM == 10 ]]; then
+            SCALE_KEY=0
+        else
+            SCALE_KEY=$SCALE_NUM
+        fi
 
         if $DB_MODE; then
             printf "info: '$MODE_INFO'\n"
@@ -99,7 +105,7 @@ else
             xrandr --addmode "$OUTPUT_DEV" "$MODE_NAME"
         elif [[ "$MODE" == "sxhkd" ]]; then
             printf "$(
-                printf "super + r ; $SCALE_NUM:\n"
+                printf "super + r ; $SCALE_KEY:\n"
                 printf "    xrandr --output $OUTPUT_DEV --mode $MODE_NAME\n"
             )\n"
         elif [[ "$MODE" == "list" ]]; then

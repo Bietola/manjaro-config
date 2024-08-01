@@ -78,7 +78,9 @@ function dolink() {
 
     echo "Setting up $unit_name at $dest"
     # TODO: Make calling haskell scripts easier
-    $CONF_REP/utils/code/hs/stack-proj/src/symlink-w-tree/symlink-w-tree.hs "$orig" "$dest"
+    # $CONF_REP/utils/code/hs/stack-proj/src/symlink-w-tree/symlink-w-tree.hs "$orig" "$dest"
+    mkdir -p "$(dirname $dest)"
+    ln -s "$orig" "$dest"
 }
 
 # Even more buffed symlink function (does heavylifting)
@@ -254,7 +256,7 @@ lncfge :h ".bashrc"
 # environment.d
 # NB. This is only used for the `.conf` file within, containing the environmental variables used
 #     by all user systemd services.
-lncfge :c environment.d
+# lncfge :c environment.d
 
 # xprofile
 lncfge :h ".xprofile"
@@ -273,11 +275,11 @@ lncfge :c nvim
 lncfge :c ranger
 
 # sxhkd
-lncfge :c sxhkd
+# lncfge :c sxhkd
 
 # xfce4
 # Mostly for keyboard shortcuts emulating a tiled window manager.
-lncfge :c xfce4
+# lncfge :c xfce4
 
 # xmonad
 # lncfge :h ".xmonad"

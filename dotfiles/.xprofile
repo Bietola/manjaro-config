@@ -4,7 +4,8 @@
 # /sul/config-keyboard
 
 # Vim is the wae
-setxkbmap -layout fi -option caps:escape
+# DONE WITH KDE
+# setxkbmap -layout fi -option caps:swapescape
 
 # Custom keys
 # ITA
